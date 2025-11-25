@@ -6,15 +6,15 @@
 
 ```
 toss-frontend-fundamentals/
-├── AGENTS.md                                    # 사람 + AI 공용 철학 문서
+├── AGENTS.md                                    # 코드 품질 철학 문서
+├── ACCESSIBILITY.md                             # 접근성 철학 문서
 └── .cursor/
     └── rules/
-        └── frontend-code-quality.mdc            # Cursor Agent용 구체적인 행동 지침
+        ├── frontend-code-quality.mdc            # 코드 품질 규칙
+        └── accessibility.mdc                    # 접근성 규칙
 ```
 
-## 사용 방법
-
-프로젝트에서 이 규칙을 사용하려면 `toss-frontend-fundamentals` 폴더의 내용을 프로젝트 루트로 복사하거나 심볼릭 링크를 생성하세요.
+`toss-frontend-fundamentals` 하위의 모든 규칙은 [Frontend Fundamentals](https://frontend-fundamentals.com/)를 기반으로 작성되었습니다.
 
 ## 참고 자료
 
