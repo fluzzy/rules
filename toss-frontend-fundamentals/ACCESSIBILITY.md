@@ -35,9 +35,44 @@
   - `open` / `aria-expanded`
   - `disabled` / `aria-disabled`
   - `aria-current` (현재 페이지/날짜 등)
-  - `aria-busy`, `aria-live`, `role="alert"`, `role="status"`
 
-### 1-4. 키보드 탐색
+### 1-4. 라이브 리전(Live Region)
+
+동적으로 변경되는 콘텐츠를 스크린 리더에 알려주기 위해 라이브 리전을 사용합니다:
+
+- **`aria-live`**: 콘텐츠 변경 시 스크린 리더가 읽어줌
+
+  - `aria-live="polite"`: 현재 읽고 있는 내용이 끝난 후 알림 (일반적인 업데이트)
+  - `aria-live="assertive"`: 즉시 알림 (긴급한 오류, 중요 알림)
+
+- **`role="alert"`**: `aria-live="assertive"` + `aria-atomic="true"`와 동일. 오류 메시지, 긴급 알림에 사용.
+
+- **`role="status"`**: `aria-live="polite"` + `aria-atomic="true"`와 동일. 상태 업데이트, 성공 메시지에 사용.
+
+- **`aria-busy`**: 콘텐츠가 로딩 중임을 알림. `true`일 때 스크린 리더가 변경 알림을 보류.
+
+- **`aria-atomic`**: `true`이면 변경된 부분만이 아닌 전체 영역을 읽음.
+
+예시:
+
+```tsx
+// 폼 제출 결과 알림
+<div role="status" aria-live="polite">
+  {submitSuccess && "저장되었습니다."}
+</div>
+
+// 오류 메시지
+<div role="alert">
+  {errorMessage}
+</div>
+
+// 로딩 상태
+<div aria-busy={isLoading} aria-live="polite">
+  {isLoading ? "로딩 중..." : content}
+</div>
+```
+
+### 1-5. 키보드 탐색
 
 - Tab/Shift+Tab, Enter, Space, 방향키로 UI를 조작할 수 있게 만듭니다.
 - **커스텀 인터랙티브 요소**를 만들면:
@@ -46,7 +81,7 @@
   - `role` 설정
   - `onKeyDown`에서 Enter / Space 처리
 
-### 1-5. 시각 정보에만 의존하지 않기
+### 1-6. 시각 정보에만 의존하지 않기
 
 - 색/아이콘/이미지로만 정보가 전달되면 안 됩니다.
 - 항상 **텍스트 또는 ARIA 레이블**로 보완합니다.

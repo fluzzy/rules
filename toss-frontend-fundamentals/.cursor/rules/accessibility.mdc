@@ -1,5 +1,5 @@
 ---
-description: 접근성(a11y) – 역할, 레이블, 상태, 키보드 탐색
+description: 프론트엔드 접근성(a11y) 규칙 – 시맨틱 태그, ARIA 속성, 키보드 탐색, UI 컴포넌트별 패턴
 globs:
   - "src/**/*.{ts,tsx,js,jsx}"
 alwaysApply: true
@@ -39,9 +39,45 @@ alwaysApply: true
 
 - 의미 없는 장식 이미지는 `alt=""`로 처리합니다.
 
-## 2. UI 컴포넌트별 규칙
+## 2. 라이브 리전(Live Region)
 
-### 탭(Tab)
+동적으로 변경되는 콘텐츠를 스크린 리더에 알려주기 위해 라이브 리전을 사용합니다:
+
+- **`aria-live`**: 콘텐츠 변경 시 스크린 리더가 읽어줌
+
+  - `aria-live="polite"`: 현재 읽고 있는 내용이 끝난 후 알림 (일반적인 업데이트)
+  - `aria-live="assertive"`: 즉시 알림 (긴급한 오류, 중요 알림)
+
+- **`role="alert"`**: `aria-live="assertive"` + `aria-atomic="true"`와 동일. 오류 메시지, 긴급 알림에 사용.
+
+- **`role="status"`**: `aria-live="polite"` + `aria-atomic="true"`와 동일. 상태 업데이트, 성공 메시지에 사용.
+
+- **`aria-busy`**: 콘텐츠가 로딩 중임을 알림. `true`일 때 스크린 리더가 변경 알림을 보류.
+
+- **`aria-atomic`**: `true`이면 변경된 부분만이 아닌 전체 영역을 읽음.
+
+예시:
+
+```tsx
+// 폼 제출 결과 알림
+<div role="status" aria-live="polite">
+  {submitSuccess && "저장되었습니다."}
+</div>
+
+// 오류 메시지
+<div role="alert">
+  {errorMessage}
+</div>
+
+// 로딩 상태
+<div aria-busy={isLoading} aria-live="polite">
+  {isLoading ? "로딩 중..." : content}
+</div>
+```
+
+## 3. UI 컴포넌트별 규칙
+
+### 3-1. 탭(Tab)
 
 - 구조:
 
@@ -55,7 +91,7 @@ alwaysApply: true
 - `aria-selected` 값과 패널 표시 여부를 항상 동기화합니다.
 - 방향키(좌/우)로 탭 이동 가능하게 구현합니다.
 
-### 아코디언(Accordion)
+### 3-2. 아코디언(Accordion)
 
 - 가능하면 `<details>` + `<summary>` 사용을 우선합니다.
 - 커스텀 구현 시:
@@ -65,7 +101,7 @@ alwaysApply: true
 
 - `aria-expanded` 값과 패널 표시 여부를 항상 동기화합니다.
 
-### 모달(Modal/Dialog)
+### 3-3. 모달(Modal/Dialog)
 
 - 가능하면 `<dialog>` 사용을 우선합니다:
 
@@ -82,7 +118,7 @@ alwaysApply: true
   - 배경 콘텐츠: 모달 열려 있을 때 메인 영역에 `inert` 부여
   - 포커스 트랩: Tab/Shift+Tab으로 포커스가 모달 안에서만 순환
 
-### 라디오 버튼(Radio)
+### 3-4. 라디오 버튼(Radio)
 
 - 기본 구조 (권장):
 
@@ -101,7 +137,7 @@ alwaysApply: true
   - 각 옵션: `role="radio"` + `aria-checked={true|false}` + `tabIndex={0}` + Space 키 처리
   - 그룹: `role="radiogroup"` + `aria-labelledby`
 
-### 체크박스(Checkbox)
+### 3-5. 체크박스(Checkbox)
 
 - 그룹이 있는 경우:
 
@@ -112,7 +148,7 @@ alwaysApply: true
 
   - `role="checkbox"` + `aria-checked={true|false}` + `tabIndex={0}` + Space 키 처리
 
-### 스위치(Switch)
+### 3-6. 스위치(Switch)
 
 - HTML 기반: `<input type="checkbox" role="switch" checked={isOn} />` + 레이블
 - 커스텀 스위치:
@@ -120,7 +156,7 @@ alwaysApply: true
   - `role="switch"` + `aria-checked={isOn}` + `tabIndex={0}` + Space 키 처리
   - 레이블 필수 ("무엇을 켜고 끄는지" 설명)
 
-## 3. 실전 패턴
+## 4. 실전 패턴
 
 - **버튼 안에 버튼/링크 넣지 않기**:
 
@@ -164,7 +200,7 @@ alwaysApply: true
   - `alt=""`: 장식용 이미지, 주변 텍스트가 이미 설명하는 경우, 텍스트와 함께 있는 아이콘
   - 불필요한 단어(`아이콘`, `버튼`) 제거, 맥락 기반으로 작성
 
-## 4. eslint-plugin-jsx-a11y
+## 5. eslint-plugin-jsx-a11y
 
 - 필수 규칙:
 
@@ -181,7 +217,7 @@ alwaysApply: true
   - `polymorphicPropName: "as"`로 폴리모픽 prop 지원
   - `labelAttributes`로 커스텀 레이블 prop 지원
 
-## 5. 새 컴포넌트 작성 시 체크리스트
+## 6. 새 컴포넌트 작성 시 체크리스트
 
 컴포넌트를 만들 때 다음을 반드시 확인합니다:
 

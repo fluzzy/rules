@@ -1,5 +1,5 @@
 ---
-description: 프론트엔드 코드 품질 – 가독성, 예측 가능성, 응집도, 결합도
+description: 프론트엔드 코드 품질 규칙 – 가독성, 예측 가능성, 응집도, 결합도 기반 변경하기 쉬운 코드 작성
 globs:
   - "src/**/*.{ts,tsx,js,jsx}"
 alwaysApply: true
