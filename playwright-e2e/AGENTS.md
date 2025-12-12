@@ -150,9 +150,9 @@ TODO 문서는 **페이지 단위** 또는 **기능 단위**로 작성합니다.
 
    ```ts
    // tests/seed.spec.ts
-   import { test, expect } from "./fixtures";
+   import { test, expect } from './fixtures';
 
-   test("seed", async ({ page }) => {
+   test('seed', async ({ page }) => {
      // 공통 fixture / 전역 셋업이 정상 동작하는지만 확인
    });
    ```
@@ -225,14 +225,14 @@ TODO 문서는 **페이지 단위** 또는 **기능 단위**로 작성합니다.
 // spec: specs/post-like.md
 // seed: tests/seed.spec.ts
 
-import { test, expect } from "../../fixtures/auth.fixtures";
+import { test, expect } from '../../fixtures/auth.fixtures';
 
-test.describe("/posts/[id] - 좋아요", () => {
-  test("비회원이 좋아요를 누르면 로그인 모달이 뜬다", async ({ page }) => {
+test.describe('/posts/[id] - 좋아요', () => {
+  test('비회원이 좋아요를 누르면 로그인 모달이 뜬다', async ({ page }) => {
     // ...
   });
 
-  test("회원이 좋아요를 누르면 카운트가 증가한다", async ({ memberPage }) => {
+  test('회원이 좋아요를 누르면 카운트가 증가한다', async ({ memberPage }) => {
     // ...
   });
 });
@@ -250,12 +250,12 @@ test.describe("/posts/[id] - 좋아요", () => {
 
 ```ts
 // constants/routes.ts 또는 유사한 파일에서
-import { ROUTES } from "@/constants/routes";
+import { ROUTES } from '@/constants/routes';
 
 // 라우트가 constants에 정의되어 있는지 확인
 if (!ROUTES.POSTS) {
   throw new Error(
-    "ROUTES.POSTS가 constants에 정의되어 있지 않습니다. constants 파일을 확인하세요."
+    'ROUTES.POSTS가 constants에 정의되어 있지 않습니다. constants 파일을 확인하세요.'
   );
 }
 
@@ -285,9 +285,9 @@ await page.goto(ROUTES.POSTS);
 // playwright.config.ts
 export default defineConfig({
   use: {
-    screenshot: "only-on-failure", // 실패 시 스크린샷 자동 저장
-    video: "retain-on-failure",    // 실패 시 비디오 자동 저장
-    trace: "retain-on-failure",    // 실패 시 trace 자동 저장
+    screenshot: 'only-on-failure', // 실패 시 스크린샷 자동 저장
+    video: 'retain-on-failure', // 실패 시 비디오 자동 저장
+    trace: 'retain-on-failure', // 실패 시 trace 자동 저장
   },
 });
 ```
@@ -314,9 +314,9 @@ npx playwright show-report
 예:
 
 ```ts
-const firstPostCard = page.getByTestId("post-card").first();
-const likeButton = page.getByRole("button", { name: /좋아요/i });
-const loginModal = page.getByRole("dialog", {
+const firstPostCard = page.getByTestId('post-card').first();
+const likeButton = page.getByRole('button', { name: /좋아요/i });
+const loginModal = page.getByRole('dialog', {
   name: /로그인이 필요한 기능입니다./i,
 });
 ```
@@ -325,8 +325,8 @@ const loginModal = page.getByRole("dialog", {
 
 ```ts
 const postItem = page
-  .getByRole("article")
-  .filter({ hasText: "첫 번째 게시물 제목" });
+  .getByRole('article')
+  .filter({ hasText: '첫 번째 게시물 제목' });
 ```
 
 #### 4.3.5 Assertions
@@ -334,7 +334,7 @@ const postItem = page
 - web-first assertion(`await expect(...)`) 만 사용합니다.
 
 ```ts
-await expect(page.getByText("로그인이 필요한 기능입니다.")).toBeVisible();
+await expect(page.getByText('로그인이 필요한 기능입니다.')).toBeVisible();
 await expect(likeButton).toBeEnabled();
 ```
 
@@ -351,25 +351,25 @@ await expect(likeButton).toBeEnabled();
 
 ```ts
 // e2e/fixtures/auth.fixtures.ts
-import { test as base } from "@playwright/test";
-import { ROUTES } from "@/constants/routes";
+import { test as base } from '@playwright/test';
+import { ROUTES } from '@/constants/routes';
 
 export const test = base.extend<{
-  memberPage: (typeof base)["page"];
+  memberPage: (typeof base)['page'];
 }>({
   memberPage: async ({ page }, use) => {
     if (!ROUTES.LOGIN) {
       throw new Error(
-        "ROUTES.LOGIN이 constants에 정의되어 있지 않습니다. constants 파일을 확인하세요."
+        'ROUTES.LOGIN이 constants에 정의되어 있지 않습니다. constants 파일을 확인하세요.'
       );
     }
     await page.goto(ROUTES.LOGIN);
-    await page.getByLabel("이메일").fill(process.env.E2E_USER_EMAIL!);
-    await page.getByLabel("비밀번호").fill(process.env.E2E_USER_PASSWORD!);
-    await page.getByRole("button", { name: /로그인/ }).click();
+    await page.getByLabel('이메일').fill(process.env.E2E_USER_EMAIL!);
+    await page.getByLabel('비밀번호').fill(process.env.E2E_USER_PASSWORD!);
+    await page.getByRole('button', { name: /로그인/ }).click();
     if (!ROUTES.HOME) {
       throw new Error(
-        "ROUTES.HOME이 constants에 정의되어 있지 않습니다. constants 파일을 확인하세요."
+        'ROUTES.HOME이 constants에 정의되어 있지 않습니다. constants 파일을 확인하세요.'
       );
     }
     await page.waitForURL(ROUTES.HOME);
@@ -377,6 +377,293 @@ export const test = base.extend<{
   },
 });
 ```
+
+#### 4.3.7 Functional Page Object Model (POM)
+
+> **참고**: 이 섹션은 [토스인컴의 E2E 자동화 여정](https://toss.tech/article/income-qa-e2e-automation)에서 영감을 받았습니다.
+
+**핵심 원칙**: 클래스 기반 POM 대신 **함수형(Stateless) POM**을 사용합니다.
+
+- **상태를 가지는 클래스 대신, 무상태 함수로 페이지 동작을 설계**합니다.
+- 원칙: 입력으로 `page`(그리고 필요 시 `context`)를 받고, 결과로 `page`를 돌려줍니다.
+- 이렇게 하면 `this` 상태 관리와 상속 구조의 복잡성을 피하고, 유지보수 비용을 줄일 수 있습니다.
+
+**Before — POM 없이 작성된 테스트 (중복·취약)**
+
+```ts
+// ❌ 이런 코드가 여러 파일에 복사되어 있었습니다.
+async function test1() {
+  await page.goto(ROUTES.POSTS);
+  await page.click('#category-selector');
+  await page.click('button:has-text("전체")');
+  await page.click('button:has-text("작성하기")'); // 텍스트 바뀌면 전 파일 수정
+  await page.fill('[placeholder="제목을 입력하세요"]', '테스트 제목');
+  // ...
+}
+```
+
+**After — 함수형 POM으로 캡슐화**
+
+```ts
+// e2e/page-objects/post-list.page.ts
+import { Page, BrowserContext } from '@playwright/test';
+import { ROUTES } from '@/constants/routes';
+
+/**
+ * 게시물 목록 페이지로 이동하고 초기 상태를 준비합니다.
+ * @param page - Playwright Page 객체
+ * @param context - BrowserContext (필요 시)
+ * @returns 준비된 Page 객체
+ */
+export async function gotoPostListPage(
+  page: Page,
+  context?: BrowserContext
+): Promise<Page> {
+  if (!ROUTES.POSTS) {
+    throw new Error('ROUTES.POSTS가 constants에 정의되어 있지 않습니다.');
+  }
+  await page.goto(ROUTES.POSTS);
+  await waitForNetworkIdleSafely(page);
+  return page;
+}
+
+/**
+ * 카테고리 선택 버튼을 클릭합니다.
+ * @param page - Playwright Page 객체
+ * @param categoryName - 선택할 카테고리 이름 (예: "전체", "공지")
+ */
+export async function clickCategoryButton(
+  page: Page,
+  categoryName: string
+): Promise<Page> {
+  await clickButton(page, categoryName);
+  await waitForNetworkIdleSafely(page);
+  return page;
+}
+
+/**
+ * 작성하기 버튼을 클릭합니다.
+ * 문구가 바뀌면 여기 "한 곳"만 수정하면 됩니다.
+ */
+export async function clickWriteButton(page: Page): Promise<Page> {
+  await clickButton(page, '작성하기');
+  await waitForNetworkIdleSafely(page);
+  return page;
+}
+```
+
+**테스트는 "사용자가 읽는 시나리오"처럼**
+
+```ts
+// e2e/tests/posts/post-write.spec.ts
+import { test, expect } from '../../fixtures/auth.fixtures';
+import {
+  gotoPostListPage,
+  clickCategoryButton,
+  clickWriteButton,
+} from '../../page-objects/post-list.page';
+
+test('회원이 게시물을 작성할 수 있다', async ({ memberPage }) => {
+  let currentPage = await gotoPostListPage(memberPage);
+  currentPage = await clickCategoryButton(currentPage, '전체');
+  currentPage = await clickWriteButton(currentPage);
+  // ...
+});
+```
+
+**네이밍 컨벤션 (가독성 강화)**
+
+| 접두사                | 의미        | 예시                                 |
+| --------------------- | ----------- | ------------------------------------ |
+| `goto`                | 페이지 이동 | `gotoPostListPage()`                 |
+| `click`               | 클릭        | `clickLikeButton()`                  |
+| `enter`               | 입력        | `enterPostTitle()`                   |
+| `answer`              | 질문 응답   | `answerConfirmDialog()`              |
+| `add`/`skip`/`update` | 데이터 조작 | `addComment()`, `skipOptionalStep()` |
+| `verify`/`check`      | 검증        | `verifyPostCount()`                  |
+| `waitFor`             | 대기        | `waitForPostListReady()`             |
+| `complete`            | 복합 플로우 | `completeLogin()`                    |
+
+**사용자 시나리오 기준으로 파일 나누기**
+
+파일을 나눌 때는 **화면이 아니라 사용자 시나리오**를 기준으로 경계를 나눕니다.
+
+예: 게시물 작성 플로우를 단계별로 분리
+
+```ts
+e2e/page-objects/
+├── post-list.page.ts        # 목록 페이지 (조회, 필터)
+├── post-write.page.ts       # 작성 페이지 (제목, 내용 입력)
+├── post-detail.page.ts      # 상세 페이지 (조회, 좋아요, 댓글)
+└── post-edit.page.ts        # 수정 페이지 (편집, 저장)
+```
+
+이렇게 나누면 페이지 전환이 잦아도 책임 경계가 명확하고, 각 단계를 독립적으로 수정·재사용할 수 있습니다.
+
+**Robust Click Strategy — 클릭 실패에 흔들리지 않게**
+
+React 렌더링 타이밍으로 생기는 간헐 실패(플래키)를 줄이기 위해, 클릭 유틸에 4단계 폴백을 넣습니다.
+
+```ts
+// e2e/utils/click.utils.ts
+import { Page } from '@playwright/test';
+
+/**
+ * 버튼을 안정적으로 클릭합니다.
+ * 4단계 폴백 전략을 사용하여 플래키를 최소화합니다.
+ *
+ * @param page - Playwright Page 객체
+ * @param buttonName - 클릭할 버튼의 텍스트 또는 aria-label
+ * @param options - 추가 옵션
+ * @returns 클릭 성공 여부
+ */
+export async function clickButton(
+  page: Page,
+  buttonName: string,
+  options: { role?: 'button' | 'link' } = {}
+): Promise<void> {
+  const role = options.role || 'button';
+  const button = page.getByRole(role, { name: buttonName });
+  await button.waitFor({ state: 'visible' });
+
+  try {
+    // 1) Enter 키 (가장 안정적)
+    await button.focus();
+    await page.keyboard.press('Enter');
+  } catch {
+    try {
+      // 2) 기본 클릭
+      await button.click();
+    } catch {
+      try {
+        // 3) Force 클릭
+        await button.click({ force: true });
+      } catch {
+        // 4) JS 직접 실행
+        await page.evaluate(
+          ({ name, role }) => {
+            const elements = Array.from(
+              document.querySelectorAll(`${role}, [role="${role}"]`)
+            );
+            const btn = elements.find(
+              (el) =>
+                el.textContent?.includes(name) ||
+                el.getAttribute('aria-label') === name
+            ) as HTMLElement;
+            btn?.click();
+          },
+          { name: buttonName, role }
+        );
+      }
+    }
+  }
+
+  await waitForNetworkIdleSafely(page);
+}
+```
+
+**페이지 전환 자동 감지 — 새 창/리다이렉트에서도 안전하게**
+
+Next.js의 클라이언트 사이드 네비게이션이나 외부 링크로 인해 새 창이 열리거나 리다이렉트가 일어나면 기존 `page`가 닫힐 수 있습니다. 항상 최신 유효 페이지를 다시 얻어 쓰는 패턴을 유틸로 통일합니다.
+
+```ts
+// e2e/utils/page.utils.ts
+import { BrowserContext, Page } from '@playwright/test';
+
+/**
+ * 컨텍스트에서 유효한 최신 페이지를 가져옵니다.
+ * 새 창이나 리다이렉트 후에도 안전하게 동작합니다.
+ *
+ * @param context - BrowserContext
+ * @param excludeUrls - 제외할 URL 패턴 (예: ['scrape', 'popup'])
+ * @returns 유효한 Page 객체
+ */
+export async function getLatestValidPage(
+  context: BrowserContext,
+  excludeUrls: string[] = []
+): Promise<Page> {
+  const pages = context.pages();
+  for (let i = pages.length - 1; i >= 0; i--) {
+    const p = pages[i];
+    if (p.isClosed()) continue;
+
+    const url = p.url();
+    const shouldExclude = excludeUrls.some((pattern) => url.includes(pattern));
+    if (!shouldExclude) return p;
+  }
+  throw new Error('유효한 페이지를 찾을 수 없습니다');
+}
+
+/**
+ * 네트워크가 안정될 때까지 안전하게 대기합니다.
+ * 타임아웃이 나더라도 테스트는 계속 진행합니다.
+ */
+export async function waitForNetworkIdleSafely(
+  page: Page,
+  timeout: number = 5000
+): Promise<void> {
+  try {
+    await page.waitForLoadState('networkidle', { timeout });
+  } catch {
+    // 타임아웃이 나도 계속 진행 (네트워크가 완전히 멈추지 않을 수 있음)
+  }
+}
+```
+
+테스트 본문에서는 전환마다 `currentPage = ...`를 명시적으로 교체해 항상 올바른 탭에서 동작하도록 합니다.
+
+```ts
+test('외부 링크로 이동 후 돌아오기', async ({ page, context }) => {
+  let currentPage = await gotoPostListPage(page);
+  // 외부 링크 클릭 (새 창 열림)
+  await currentPage.getByRole('link', { name: '외부 사이트' }).click();
+  // 최신 유효 페이지 가져오기
+  currentPage = await getLatestValidPage(context);
+  await expect(currentPage).toHaveURL(/external-site/);
+});
+```
+
+**읽히는 테스트를 만드는 법**
+
+1. **서술형 제목으로 시작하기**
+
+   - 테스트는 제목부터 서술형 문장으로 작성합니다.
+   - 예: `"비회원이 좋아요를 누르면 로그인 모달이 뜬다"`
+
+2. **사전조건 명확히 하기**
+
+   - 사전조건에는 "로그인 가능한 유저", "게시물 목록 접근 가능"처럼 최소한의 맥락만 남깁니다.
+
+3. **Given-When-Then 구조로 작성하기**
+
+   - 시나리오는 Given–When–Then의 리듬으로 작성합니다.
+   - 예: "로그인한 상태에서(Given), 게시물 목록에서 첫 번째 게시물을 클릭하고(When), 좋아요 버튼을 누르면 카운트가 증가한다(Then)."
+
+4. **자연어를 코드로 변환하기**
+   - 자연어로 먼저 작성한 시나리오를 그대로 코드로 옮깁니다.
+
+```ts
+test('로그인한 회원이 게시물에 좋아요를 누르면 카운트가 증가한다', async ({
+  memberPage,
+}) => {
+  // Given: 로그인한 상태에서 게시물 목록 페이지 접근
+  let currentPage = await gotoPostListPage(memberPage);
+
+  // When: 첫 번째 게시물 클릭 → 상세 페이지 이동
+  currentPage = await clickFirstPostCard(currentPage);
+
+  // When: 좋아요 버튼 클릭
+  const initialCount = await getLikeCount(currentPage);
+  await clickLikeButton(currentPage);
+
+  // Then: 좋아요 카운트가 1 증가했는지 확인
+  await expect(currentPage.getByTestId('like-count')).toHaveText(
+    String(initialCount + 1)
+  );
+});
+```
+
+핵심은 하나입니다. **테스트가 먼저 읽히고, 코드가 그 뒤를 따라간다.** 이 순서를 지키면 비개발자도 테스트를 이해할 수 있고, 개발자는 즉시 실행 가능한 스크립트를 얻습니다.
 
 ---
 
@@ -422,7 +709,8 @@ export const test = base.extend<{
 
 ## 6. 공통 테스트 철학
 
-> 여러 자료에서 공통으로 강조하는 E2E / Playwright best practice 를 이 프로젝트 기준으로 요약한 섹션.
+> 여러 자료에서 공통으로 강조하는 E2E / Playwright best practice 와  
+> [토스인컴의 E2E 자동화 여정](https://toss.tech/article/income-qa-e2e-automation)에서 배운 Functional POM 철학을 이 프로젝트 기준으로 요약한 섹션.
 
 1. **사용자 눈에 보이는 행동만 검증합니다.**
 
@@ -440,10 +728,24 @@ export const test = base.extend<{
 5. **플레이크 방지를 최우선으로 고려합니다.**
 
    - 타이밍 이슈는 web-first assertion/locator 전략으로 해결합니다.
+   - Robust Click Strategy (4단계 폴백)를 사용하여 클릭 실패에 내성을 만듭니다.
 
 6. **에이전트는 테스트 코드만 자동화합니다.**
 
    - 비즈니스 로직, 도메인 규칙은 사람이 정의한 TODO 문서 / PRD 를 항상 우선합니다.
+
+7. **Functional POM: 복잡함을 이기는 방법은 단순화와 일관성입니다.**
+
+   - 상속과 클래스보다 **작은 함수와 명시적 컨텍스트**가 훨씬 강합니다.
+   - 자주 변하는 요소(문구, 셀렉터, 대기 로직)일수록 **한 곳(POM/유틸)에 모아 관리**하는 게 낫습니다.
+   - 페이지 전환 시에는 **반드시 currentPage를 새로 할당**하는 원칙을 지킵니다.
+   - 과한 추상화를 피하고, **작은 함수와 명시적 인자로 명료함**을 택합니다.
+
+8. **읽히는 테스트를 만듭니다.**
+
+   - 테스트는 Given-When-Then 구조로 작성하고, 서술형 제목을 사용합니다.
+   - 테스트 본문에는 최대한 **비즈니스 문장만 남기고**, 버튼/셀렉터/대기 로직은 모두 POM이 책임집니다.
+   - 코드는 문서처럼 작성합니다. 모든 함수에는 JSDoc으로 사용법과 주의사항을 적어둡니다.
 
 ---
 
@@ -460,3 +762,13 @@ export const test = base.extend<{
 
 이 가이드는, TODO 문서만 써주면
 Planner / Generator / Healer / MCP 를 통해 **끝까지 끌고 갈 수 있는** 테스트 환경을 만들기 위한 기준입니다.
+
+---
+
+## 참고 자료
+
+- [토스인컴 세금 환급 서비스: 빠른 속도에서 품질을 지키기 위한 E2E 자동화 여정](https://toss.tech/article/income-qa-e2e-automation) (정수호, 2025년 12월 2일)
+  - Functional Page Object Model (POM) 접근법
+  - Robust Click Strategy
+  - 읽히는 테스트 작성법
+  - 페이지 전환 자동 감지
