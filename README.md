@@ -18,6 +18,12 @@ playwright-e2e/                                  # Playwright 공식 문서 기�
 └── .cursor/
     └── rules/
         └── e2e-testing.mdc                      # E2E 테스트 규칙
+
+meta-agents-rule/                                # Meta Agents Rule of Two 기반
+├── AGENTS.md                                    # Agents Rule of Two 철학 문서
+└── .cursor/
+    └── rules/
+        └── agents-rule-of-two.mdc               # Agents Rule of Two 규칙
 ```
 
 ## 참고 자료
@@ -27,3 +33,4 @@ playwright-e2e/                                  # Playwright 공식 문서 기�
 - [Playwright Best Practices](https://playwright.dev/docs/best-practices)
 - [Cursor Rules 문서](https://cursor.com/docs/context/rules)
 - [AGENTS.md](https://agents.md/)
+- [Meta AI Blog: Agents Rule of Two - A Practical Approach to AI Agent Security](https://ai.meta.com/blog/practical-ai-agent-security/)
