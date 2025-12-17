@@ -27,6 +27,13 @@ meta-agents-rule/                                # Meta Agents Rule of Two 기�
 └── .cursor/
     └── rules/
         └── agents-rule-of-two.mdc               # Agents Rule of Two 규칙
+
+openai-agents-guide/                             # OpenAI "A practical guide to building agents" 기반
+├── README.md                                    # README.md
+├── AGENTS.md                                    # 빌딩 에이전트 철학 문서
+└── .cursor/
+    └── rules/
+        └── building-agents.mdc                  # 빌딩 에이전트 규칙
 ```
 
 ## Rules & Documentation
@@ -42,6 +49,9 @@ meta-agents-rule/                                # Meta Agents Rule of Two 기�
 - **Meta Agents Rule of Two**
   - [AGENTS.md](./meta-agents-rule/AGENTS.md) - Agents Rule of Two 철학 문서
   - [.cursor/rules/](./meta-agents-rule/.cursor/rules/) - Cursor 규칙 파일
+- **OpenAI Practical Guide to Building Agents**
+  - [AGENTS.md](./openai-agents-guide/AGENTS.md) - 빌딩 에이전트 철학 문서
+  - [.cursor/rules/](./openai-agents-guide/.cursor/rules/) - Cursor 규칙 파일
 
 ## 참고 자료
 
