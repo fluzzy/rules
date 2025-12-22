@@ -34,6 +34,10 @@ openai-agents-guide/                             # OpenAI "A practical guide to 
 └── .cursor/
     └── rules/
         └── building-agents.mdc                  # 빌딩 에이전트 규칙
+
+agents-md-guide/                                 # HumanLayer "Writing a good CLAUDE.md" 기반
+├── README.md                                    # README.md
+└── guide.md                                     # AGENTS.md 작성 가이드
 ```
 
 ## Rules & Documentation
@@ -52,6 +56,8 @@ openai-agents-guide/                             # OpenAI "A practical guide to 
 - **OpenAI Practical Guide to Building Agents**
   - [AGENTS.md](./openai-agents-guide/AGENTS.md) - 빌딩 에이전트 철학 문서
   - [.cursor/rules/](./openai-agents-guide/.cursor/rules/) - Cursor 규칙 파일
+- **AGENTS.md 작성 가이드**
+  - [guide.md](./agents-md-guide/guide.md) - AGENTS.md 작성 가이드
 
 ## 참고 자료
 
