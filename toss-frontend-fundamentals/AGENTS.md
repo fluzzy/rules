@@ -1,99 +1,97 @@
 # AGENTS – Frontend Code Quality
 
-이 프로젝트에서 "좋은 프론트엔드 코드"는 **변경하기 쉬운 코드**를 말합니다.  
-변경 용이성은 다음 네 가지 기준으로 판단합니다: **가독성, 예측 가능성, 응집도, 결합도**.
+"Good frontend code" in this project means **code that is easy to change**.
+Changeability is evaluated by four criteria: **Readability, Predictability, Cohesion, and Coupling**.
 
-아래 기준은 사람과 AI 모두가 코드를 작성·리팩토링할 때 따라야 하는 공통 규칙입니다.
-
----
-
-## 1. 가독성(Readability)
-
-목표: 코드를 읽는 사람이 **한 번에 붙잡고 있어야 하는 맥락의 수를 줄이는 것**.
-
-에이전트/개발자는 코드를 수정/생성할 때 다음을 우선적으로 고려합니다.
-
-### 1-1. 같이 실행되지 않는 코드 분리
-
-- 하나의 컴포넌트/함수 안에서 **서로 다른 경우(권한, 상태, 모드 등)의 분기 로직**이 섞여 있다면
-  - "viewer / admin", "로그인 / 비로그인" 같은 **역할 별 컴포넌트/함수**로 나눕니다.
-  - 공통 로직은 상위에서 `isViewer ? <Viewer /> : <Admin />` 식으로 분기합니다.
-- `if (조건) return ...;` / `else ...` 처럼 **조건이 교차로 섞여 있는 코드**는
-  - "역할/상태 하나만 책임지는 작은 컴포넌트/함수"로 쪼갭니다.
-
-### 1-2. 구현 상세 추상화하기
-
-- 상위 컴포넌트/페이지에서는 **"무엇을 하는지"만 보이게** 만들고
-  - "로그인 상태 확인 후 리다이렉트", "권한 체크" 같은 로직은
-    - Wrapper 컴포넌트(`AuthGuard`)나 HOC(`withAuthGuard`)로 감춥니다.
-- 한 번에 이해해야 할 요소가 6~7개를 넘기지 않도록,
-  - 긴 로직은 **의미 있는 단위의 함수/컴포넌트로 추상화**합니다.
-
-### 1-3. 로직 종류에 따라 뒤섞인 함수 쪼개기
-
-- 쿼리 파라미터, 상태, API 호출, 포맷팅 등을 **한 Hook/함수 안에 다 우겨넣지 않습니다.**
-- `usePageState`처럼 "페이지 전체 상태/쿼리"를 모두 다루는 Hook은 지양하고,
-  - `useCardIdQueryParam`, `useDateRangeQueryParam`처럼 **책임 1개짜리 Hook**으로 쪼갭니다.
-
-### 1-4. 이름 붙이기로 의도 드러내기
-
-- 복잡한 조건식은 **중첩된 삼항·논리식 그대로 쓰지 말고**,
-  - `const isSameCategory = ...`, `const isPriceInRange = ...`처럼  
-    **중간 변수/함수에 이름을 붙여서 의미를 노출**합니다.
-- 숫자 리터럴(300, 86400, 404 등)은 **매직 넘버 금지**
-  - `ANIMATION_DELAY_MS`, `ONE_DAY_SECONDS`, `HTTP_NOT_FOUND` 등 상수로 추상화합니다.
-
-### 1-5. 위에서 아래로 읽히게, 시점 이동 줄이기
-
-- 어떤 버튼이 disabled 되는 조건, 어떤 권한에서 어떤 UI를 보여줄지 등은
-  - 한 함수/컴포넌트 내에서 **위에서 아래로 순차적으로 읽으면 이해되도록** 작성합니다.
-- 지나치게 추상적인 정책 객체(`POLICY_SET`)를 만들기보다는,
-  - 상황이 단순하다면 `switch (role)`로 **요구사항을 그대로 코드에 펼치는 것**을 우선 고려합니다.
+These guidelines apply to both humans and AI agents when writing or refactoring code.
 
 ---
 
-## 2. 예측 가능성(Predictability)
+## 1. Readability
 
-목표: 함수/컴포넌트의 **이름, 파라미터, 반환 값만 보고도 동작을 예측 가능하게** 만드는 것.
+**Goal**: Reduce the amount of context a reader must hold in their head at once.
 
-### 2-1. 이름 겹치지 않게 관리하기
+### 1-1. Separate Code That Doesn't Execute Together
 
-- 기존 라이브러리와 **이름이 같은 래퍼 함수/모듈을 만들지 않습니다.**
-  - 예: `http` 라이브러리를 감싼 모듈은 `httpService`처럼 **다른 이름**을 사용합니다.
-  - "토큰 붙여서 인증 요청을 보낸다"면 `getWithAuth`, `fetchWithAuth`처럼 의도가 보이는 이름을 사용합니다.
+- When a component/function contains **branching logic for different cases** (roles, states, modes):
+  - Split into **role-specific components/functions** (e.g., `Viewer` / `Admin`, `LoggedIn` / `Guest`).
+  - Handle branching at the parent level: `isViewer ? <Viewer /> : <Admin />`.
+- When conditions are **interleaved** (`if (cond) return ...; else ...`):
+  - Extract into smaller components/functions that each handle **one responsibility**.
 
-### 2-2. 같은 종류의 함수는 반환 타입 통일
+### 1-2. Abstract Implementation Details
 
-- 서버 API를 호출하는 React Query Hook은 **항상 `UseQueryResult`를 반환**하도록 통일합니다.
-  - `useUser`, `useServerTime` 등이 어떤 것은 `query`, 어떤 것은 `query.data`를 반환하지 않게 합니다.
-- 유효성 검사 함수는 **동일한 패턴의 반환 타입**을 사용합니다.
-  - 예: `type ValidationResult = { ok: true } | { ok: false; reason: string }`
-  - `checkIsNameValid`, `checkIsAgeValid` 모두 이 타입을 반환하게 맞춥니다.
+- Higher-level components/pages should only show **"what" is happening**, not "how".
+  - Hide logic like "check login state and redirect" or "verify permissions" inside:
+    - Wrapper components (`AuthGuard`) or HOCs (`withAuthGuard`).
+- Keep the number of concepts to understand at once to **6-7 or fewer**.
+  - Extract long logic into **meaningful units** (functions/components).
 
-### 2-3. 숨은 로직(부작용) 드러내기
+### 1-3. Split Mixed Logic Types
 
-- 함수 이름/시그니처로 드러나지 않는 **숨은 로깅·추적·알림 전송**을 내부에 심지 않습니다.
-  - `fetchBalance()` 안에서 조용히 `logging.log`를 호출하지 않습니다.
-- 부작용은 **호출하는 쪽**에 두고,
-  - `const balance = await fetchBalance(); logging.log("balance_fetched");`처럼  
-    로직이 **콜 사이트에서 보이게** 작성합니다.
+- Don't cram query params, state, API calls, and formatting into **one Hook/function**.
+- Avoid monolithic hooks like `usePageState` that handle "all page state/queries".
+  - Prefer **single-responsibility hooks**: `useCardIdQueryParam`, `useDateRangeQueryParam`.
+
+### 1-4. Name Things to Reveal Intent
+
+- Don't leave complex conditions as **nested ternaries or logical expressions**.
+  - Extract to named variables/functions: `const isSameCategory = ...`, `const isPriceInRange = ...`.
+- **No magic numbers** (300, 86400, 404).
+  - Use named constants: `ANIMATION_DELAY_MS`, `ONE_DAY_SECONDS`, `HTTP_NOT_FOUND`.
+
+### 1-5. Read Top-to-Bottom, Minimize Context Switching
+
+- Conditions for button disabled states, permission-based UI, etc. should be:
+  - Understandable by reading **sequentially from top to bottom** within one function/component.
+- Prefer **explicit code over abstract policy objects** (`POLICY_SET`) when the situation is simple.
+  - A `switch (role)` that directly reflects requirements is often clearer.
 
 ---
 
-## 3. 응집도(Cohesion)
+## 2. Predictability
 
-목표: **항상 같이 수정되는 코드들이 함께 모여 있게** 해서 수정 실수를 줄이는 것.
+**Goal**: Make behavior **predictable from the function/component's name, parameters, and return value alone**.
 
-### 3-1. 함께 수정되는 파일을 같은 디렉터리에 두기
+### 2-1. Avoid Name Collisions
 
-- "hooks/components/utils 전부 한 폴더에 모아두는 구조" 대신,
-  - **도메인 기준 폴더 구조**를 기본으로 사용합니다.
+- Don't create wrapper functions/modules with **the same name as existing libraries**.
+  - Example: A wrapper around `http` library should be named `httpService`, not `http`.
+  - Use intention-revealing names: `getWithAuth`, `fetchWithAuth`.
 
-예시:
+### 2-2. Unify Return Types for Similar Functions
 
+- React Query hooks calling server APIs should **always return `UseQueryResult`**.
+  - Don't have `useUser` return `query` while `useServerTime` returns `query.data`.
+- Validation functions should use **consistent return type patterns**.
+  - Example: `type ValidationResult = { ok: true } | { ok: false; reason: string }`.
+  - Both `checkIsNameValid` and `checkIsAgeValid` should return this type.
+
+### 2-3. Make Hidden Side Effects Visible
+
+- Don't hide **logging, tracking, or notifications** inside functions where the signature doesn't reveal them.
+  - Don't silently call `logging.log` inside `fetchBalance()`.
+- Place side effects **at the call site** so they're visible:
+  ```ts
+  const balance = await fetchBalance();
+  logging.log("balance_fetched");
+  ```
+
+---
+
+## 3. Cohesion
+
+**Goal**: Keep **code that always changes together** in the same place to reduce modification errors.
+
+### 3-1. Co-locate Files That Change Together
+
+- Instead of "hooks/components/utils all in separate folders":
+  - Use **domain-based folder structure** as the default.
+
+Example:
 ```text
 src/
-  components/         # 전역 공통
+  components/         # Global shared
   hooks/
   utils/
   domains/
@@ -107,15 +105,14 @@ src/
       utils/
 ```
 
-- 다른 도메인의 코드를 `../../../Domain2/...` 식으로 깊게 import하고 있다면
-  → 잘못된 의존 방향일 가능성을 의심합니다.
-- 기능 삭제 시, 관련 코드를 **디렉터리 단위로 통째로 지울 수 있게** 설계합니다.
+- If you're importing from `../../../Domain2/...` deeply:
+  - Suspect a **wrong dependency direction**.
+- Design so that when deleting a feature, you can **delete the entire directory**.
 
-### 3-2. 매직 넘버를 응집된 상수로 끌어올리기
+### 3-2. Elevate Magic Numbers to Cohesive Constants
 
-- 애니메이션, 타이머, 폴링 등 숫자가 **다른 코드와 함께 바뀔 가능성**이 크면
-
-  - 관련 로직 근처에 상수로 올려서 함께 수정되도록 합니다.
+- When numbers (animation, timer, polling) are **likely to change with related code**:
+  - Define constants near the related logic.
 
 ```ts
 const LIKE_ANIMATION_DELAY_MS = 300;
@@ -127,102 +124,86 @@ async function onLikeClick() {
 }
 ```
 
-### 3-3. 폼(Form)의 응집도 설계하기
+### 3-3. Design Form Cohesion Intentionally
 
-- 폼 검증을 설계할 때 **"변경 단위"**를 먼저 생각합니다.
+- When designing form validation, think about the **"unit of change"** first.
 
-**필드 단위 응집을 택할 때**
+**Choose field-level cohesion when:**
+- Each field has **independent validation/async logic** and is reusable.
+  - Example: Email format check, phone format, username duplication check.
+- If field reuse is important:
+  - Separate into field component + field-specific validation utils.
 
-- 각 필드가 **독립적인 검증/비동기 로직**을 가지고 재사용 가능할 때
-
-  - 예: 이메일 형식 검사, 전화번호 형식, 아이디 중복 체크 등
-
-- 필드 재사용이 중요하면,
-
-  - 필드 컴포넌트 + 필드 전용 검증 유틸로 분리합니다.
-
-**폼 전체 단위 응집을 택할 때**
-
-- 폼이 **하나의 비즈니스 행위**를 이루고, 필드들이 서로 강하게 얽혀 있을 때
-
-  - 예: 결제 정보, 배송 정보, 멀티 스텝 회원가입, 비밀번호 확인, 합계 계산 등
-
-- 이 경우, Zod/Schema 기반으로 **폼 전체 스키마**를 정의하고,
-
-  - 검증을 한 곳에서 관리합니다.
+**Choose form-level cohesion when:**
+- The form represents **one business action** and fields are tightly coupled.
+  - Example: Payment info, shipping info, multi-step signup, password confirmation, total calculation.
+- In this case:
+  - Define a **whole-form schema** with Zod/Schema and manage validation in one place.
 
 ---
 
-## 4. 결합도(Coupling)
+## 4. Coupling
 
-목표: 하나의 변경이 영향을 주는 범위를 **예측 가능하고 적당히 좁게** 유지하는 것.
+**Goal**: Keep the **scope of impact from one change predictable and reasonably narrow**.
 
-### 4-1. 책임을 하나씩 관리하기
+### 4-1. Manage One Responsibility at a Time
 
-- "이 페이지가 필요로 하는 모든 쿼리 파라미터/상태를 한 Hook에서 다룬다" 같은 패턴을 피합니다.
-
-  - 예: `usePageState` 처럼 거대한 Hook은 만들지 않습니다.
-
-- 대신, **각 책임을 분리한 작은 Hook**들로 나눕니다.
-
+- Avoid patterns like "one Hook handles all query params/state this page needs".
+  - Don't create giant hooks like `usePageState`.
+- Instead, split into **small hooks with separated responsibilities**:
   - `useCardIdQueryParam`
   - `useDateRangeQueryParam`
   - `useStatusListQueryParam`
+- This way, modifying a specific hook has **limited impact**, reducing coupling.
 
-- 이렇게 하면 특정 Hook 수정 시 **영향 범위가 제한**되고, 결합도가 낮아집니다.
+### 4-2. Allow Some Duplication
 
-### 4-2. 중복 코드 허용하기
+- Don't do **premature abstraction/generalization** just because of "duplication".
+- Only extract to shared Hook/component when:
+  - Multiple places currently use the same logic, AND
+  - It will **likely stay the same** in the future, AND
+  - Calling sites won't diverge significantly in requirements.
+- If behavior/logging/text might differ slightly per page:
+  - **Allow reasonable duplication** instead of extracting.
+  - Prioritize narrowing the scope of impact when changes occur.
 
-- "중복"을 이유로 **너무 이른 추상화/공통화**를 하지 않습니다.
-- 아래 조건을 만족할 때만 공통 Hook/컴포넌트로 추출합니다.
+### 4-3. Reduce Props Drilling
 
-  - 현재 여러 곳에서 같은 로직을 사용하고 있고
-  - 앞으로도 **동일하게 유지될 가능성이 높으며**
-  - 호출하는 측에서 요구사항이 크게 갈리지 않을 때
+- When **the same props pass through parent → child → grandchild...**:
+  - First question whether "intermediate components are meaningful abstractions".
 
-- 페이지마다 동작/로깅/텍스트가 조금씩 달라질 여지가 크다면
+**Order of solutions:**
 
-  - 공통 Hook으로 추출하지 말고 **적당한 중복을 허용**합니다.
-  - 변경이 일어났을 때 영향을 받는 범위를 좁히는 것이 우선입니다.
+1. **Remove unnecessary intermediate abstractions**
+   - Vague intermediate components like `ItemEditBody` should be restructured into **clearly-roled components** like `ItemEditSearch`, `ItemEditList`.
 
-### 4-3. Props Drilling 줄이기
+2. **Use Composition pattern**
+   - Parent passes list/content directly via `children`.
+   - Intermediate components handle only layout/shared UI.
 
-- 단순히 부모 → 자식 → 손자… 로 **같은 props를 계속 전달하는 구조**가 생기면
+3. Only when depth is severe and multiple levels need the same data:
+   - Then introduce **Context API** as a last resort.
 
-  - 우선 "중간 컴포넌트가 정말 의미 있는 추상화인지"부터 의심합니다.
-
-- 순서:
-
-  1. **불필요한 중간 추상화 제거**
-
-     - `ItemEditBody`처럼 역할이 애매한 중간 컴포넌트는
-       `ItemEditSearch`, `ItemEditList` 등 **역할이 명확한 컴포넌트**로 재구성합니다.
-
-  2. **조합(Composition) 패턴 사용**
-
-     - 부모에서 `children`으로 리스트/내용을 직접 내려주고,
-       중간 컴포넌트는 레이아웃/공통 UI만 담당하게 만듭니다.
-
-  3. 그래도 깊이가 심하고 여러 단계에서 같은 데이터를 써야 하면
-
-     - 그때 마지막 수단으로 **Context API**를 도입합니다.
-
-- 전역 상태 라이브러리(예: Redux, jotai 등)는
-
-  - **페이지 간 상태 공유** 수준으로 필요할 때만 사용하고,
-  - 단순 Props Drilling 해소 용도로는 남용하지 않습니다.
+- Global state libraries (Redux, Jotai, etc.):
+  - Use only when needed for **page-to-page state sharing**.
+  - Don't abuse for simple Props Drilling elimination.
 
 ---
 
-## 5. 네 가지 기준의 트레이드오프
+## 5. Trade-offs Between the Four Criteria
 
-- 4가지 기준(가독성 / 예측 가능성 / 응집도 / 결합도)은 **항상 동시에 최대화될 수 없습니다.**
-- 의사결정 순서는 보통 다음을 우선합니다.
+- The four criteria (Readability / Predictability / Cohesion / Coupling) **cannot always be maximized simultaneously**.
+- Decision priority is typically:
 
-  1. **가독성** – 아무도 못 읽으면 다른 기준은 의미가 없습니다.
-  2. **예측 가능성** – 헷갈리면 버그와 유지보수 비용이 급증합니다.
-  3. **응집도/결합도** – 변경 단위, 영향 범위를 고려해 균형을 잡습니다.
+  1. **Readability** – If no one can read it, other criteria are meaningless.
+  2. **Predictability** – Confusion leads to bugs and maintenance costs.
+  3. **Cohesion/Coupling** – Balance based on change units and impact scope.
 
-- 에이전트가 리팩토링할 때도
+- When refactoring:
+  - Explicitly think about **"which criterion to prioritize for this change"** before modifying.
 
-  - "지금 이 변경에서 **어떤 기준을 우선해야 하는지**"를 명시적으로 생각하고 수정합니다.
+---
+
+## References
+
+- [Frontend Fundamentals](https://frontend-fundamentals.com/) by Toss

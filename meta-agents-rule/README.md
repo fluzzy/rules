@@ -1,13 +1,13 @@
 # Meta Agents Rule of Two
 
-Meta의 Agents Rule of Two 프레임워크 기반 AI 에이전트 보안 규칙 모음입니다.
+AI agent security rules based on [Meta's Agents Rule of Two](https://ai.meta.com/blog/practical-ai-agent-security/).
 
-## 문서
+## Documentation
 
-- [AGENTS.md](./AGENTS.md) - Agents Rule of Two 철학 문서
+- [AGENTS.md](./AGENTS.md) - [A] Untrusted Inputs, [B] Sensitive Data, [C] State Changes
 
-## 참고 자료
+## References
 
-- [Meta AI Blog: Agents Rule of Two - A Practical Approach to AI Agent Security](https://ai.meta.com/blog/practical-ai-agent-security/)
-- [Cursor Rules 문서](https://cursor.com/docs/context/rules)
+- [Meta AI Blog: Agents Rule of Two](https://ai.meta.com/blog/practical-ai-agent-security/)
+- [Chromium Rule of Two](https://chromium.googlesource.com/chromium/src/+/main/docs/security/rule-of-two.md)
 - [AGENTS.md](https://agents.md/)

@@ -1,92 +1,101 @@
-# AGENTS.md 작성 가이드
+# AGENTS.md Writing Guide
 
-이 문서는 [HumanLayer의 "Writing a good CLAUDE.md"](https://www.humanlayer.dev/blog/writing-a-good-claude-md) 가이드를 기반으로 작성되었습니다.  
-`AGENTS.md`는 Cursor, Zed, Codex 등 에이전트 하네스에서 사용하는 `CLAUDE.md`의 오픈소스 버전입니다.
+This document is based on [HumanLayer's "Writing a good CLAUDE.md"](https://www.humanlayer.dev/blog/writing-a-good-claude-md) and [AGENTS.md](https://agents.md/).
 
-## 핵심 원칙: LLM은 (대부분) 상태가 없음
+`AGENTS.md` is a standardized file that helps AI coding agents work effectively on your project.
 
-LLM은 상태가 없는 함수입니다. 가중치는 추론 시점에 고정되어 있어 시간이 지나도 학습하지 않습니다. 모델이 코드베이스에 대해 아는 것은 당신이 제공한 토큰뿐입니다.
+---
 
-마찬가지로 Claude Code와 같은 코딩 에이전트 하네스는 에이전트의 메모리를 명시적으로 관리해야 합니다. `AGENTS.md`는 기본적으로 **모든 대화 세션에 포함되는 유일한 파일**입니다.
+## Core Principle: LLMs Are (Mostly) Stateless
 
-**이것이 의미하는 바:**
+LLMs are stateless functions. Weights are frozen at inference time and don't learn over time. **The only thing the model knows about your codebase is the tokens you put into it.**
 
-1. 코딩 에이전트는 각 세션 시작 시점에 코드베이스에 대해 전혀 모릅니다.
-2. 에이전트는 세션을 시작할 때마다 코드베이스에 대해 알아야 할 중요한 모든 것을 알려받아야 합니다.
-3. `AGENTS.md`가 이를 수행하는 선호되는 방법입니다.
+Similarly, coding agent harnesses must explicitly manage the agent's memory. `AGENTS.md` is **the only file included in every conversation by default**.
 
-## AGENTS.md는 에이전트를 코드베이스에 온보딩합니다
+**What This Means:**
 
-에이전트가 각 세션 시작 시점에 코드베이스에 대해 아무것도 모르기 때문에, `AGENTS.md`를 사용하여 에이전트를 코드베이스에 온보딩해야 합니다. 높은 수준에서 이것은 다음을 포함해야 합니다:
+1. Coding agents know nothing about the codebase at the start of each session.
+2. Agents must be told everything important about the codebase at each session start.
+3. `AGENTS.md` is the preferred method for doing this.
 
-- **WHAT**: 기술 스택, 프로젝트 구조에 대해 알려줍니다. 코드베이스의 지도를 제공합니다. 모노레포에서는 특히 중요합니다! 앱이 무엇인지, 공유 패키지가 무엇인지, 모든 것이 무엇을 위한 것인지 알려줘서 어디서 찾아야 할지 알 수 있게 합니다.
-- **WHY**: 프로젝트의 **목적**과 저장소의 모든 것이 무엇을 하는지 알려줍니다. 프로젝트의 다른 부분들의 목적과 기능은 무엇인가요?
-- **HOW**: 프로젝트에서 어떻게 작업해야 하는지 알려줍니다. 예를 들어, `node` 대신 `bun`을 사용하나요? 프로젝트에서 의미 있는 작업을 수행하는 데 필요한 모든 정보를 포함해야 합니다. 에이전트가 변경사항을 어떻게 검증할 수 있나요? 테스트, 타입 체크, 컴파일 단계를 어떻게 실행할 수 있나요?
+---
 
-하지만 이렇게 하는 방법이 중요합니다! `AGENTS.md` 파일에 에이전트가 실행할 수 있는 모든 명령을 채우려고 하지 마세요 - 최적이 아닌 결과를 얻을 것입니다.
+## AGENTS.md Onboards Agents to Your Codebase
 
-## 에이전트가 AGENTS.md를 자주 무시합니다
+Since agents know nothing about the codebase at session start, use `AGENTS.md` to onboard them. At a high level, include:
 
-어떤 모델을 사용하든, 에이전트가 `AGENTS.md` 파일의 내용을 자주 무시하는 것을 알 수 있습니다.
+- **WHAT**: Tech stack, project structure. Provide a map of the codebase. Especially important in monorepos — explain what the apps are, what shared packages exist, what everything is for.
+- **WHY**: The **purpose** of the project. What are the purposes and functions of different parts of the repository?
+- **HOW**: How to work on the project. Do you use `bun` instead of `node`? Include all information needed to do meaningful work. How can the agent validate changes? How to run tests, type checks, compile steps?
 
-에이전트 하네스는 다음과 같은 시스템 리마인더와 함께 `AGENTS.md` 파일을 에이전트의 사용자 메시지에 주입합니다:
+But **how you do this matters**. Don't try to fill `AGENTS.md` with every command the agent could run — you'll get suboptimal results.
+
+---
+
+## Agents Often Ignore AGENTS.md
+
+Regardless of which model you use, you'll find that agents often ignore the contents of `AGENTS.md`.
+
+Agent harnesses inject the `AGENTS.md` file into the agent's user message with a system reminder like:
 
 ```
 <system-reminder>
-  IMPORTANT: this context may or may not be relevant to your tasks. 
+  IMPORTANT: this context may or may not be relevant to your tasks.
   You should not respond to this context unless it is highly relevant to your task.
 </system-reminder>
 ```
 
-결과적으로, 에이전트는 현재 작업과 관련이 없다고 판단하면 `AGENTS.md`의 내용을 무시합니다. 파일에 **보편적으로 적용 가능하지 않은** 정보가 많을수록, 에이전트가 파일의 지시사항을 무시할 가능성이 높아집니다.
+As a result, agents will ignore `AGENTS.md` content if they deem it irrelevant to the current task. The more information in the file that is **not universally applicable**, the more likely the agent is to ignore the file's instructions.
 
-따라서 `AGENTS.md` 파일의 내용은 **가능한 한 보편적으로 적용 가능**해야 합니다.
+Therefore, `AGENTS.md` content should be **as universally applicable as possible**.
 
-## 좋은 AGENTS.md 파일 작성하기
+---
 
-다음 섹션은 컨텍스트 엔지니어링 모범 사례를 따르는 좋은 `AGENTS.md` 파일 작성 방법에 대한 여러 권장사항을 제공합니다.
+## Writing a Good AGENTS.md File
 
-_결과는 다를 수 있습니다._ 이러한 규칙이 모든 설정에 최적인 것은 아닙니다. 다른 것과 마찬가지로, 다음 조건을 만족할 때만 규칙을 깨는 것이 좋습니다:
+The following sections provide recommendations for writing a good `AGENTS.md` file that follows context engineering best practices.
 
-1. 언제, 왜 깨도 되는지 이해했을 때
-2. 그렇게 할 좋은 이유가 있을 때
+_Your mileage may vary._ These rules are not optimal for every setup. As with everything, only break a rule when you:
 
-### 지시사항은 적을수록 좋습니다
+1. Understand when and why you can break it
+2. Have a good reason to do so
 
-에이전트가 실행할 수 있는 모든 명령과 코드 표준 및 스타일 가이드라인을 `AGENTS.md`에 채우려는 유혹이 있을 수 있습니다. **이것을 권장하지 않습니다.**
+### Fewer Instructions Are Better
 
-연구에 따르면:
+You may be tempted to fill `AGENTS.md` with every command the agent could run, along with code standards and style guidelines. **This is not recommended.**
 
-1. **프론티어 사고형 LLM은 약 150-200개의 지시사항을 합리적인 일관성으로 따를 수 있습니다.** 작은 모델은 큰 모델보다 적은 지시사항에 주의를 기울일 수 있고, 비사고형 모델은 사고형 모델보다 적은 지시사항에 주의를 기울일 수 있습니다.
-2. **작은 모델은 훨씬 빠르게 훨씬 나빠집니다.** 구체적으로, 작은 모델은 지시사항 수가 증가함에 따라 지시사항 준수 성능이 지수적으로 감소하는 경향이 있는 반면, 큰 프론티어 사고형 모델은 선형적으로 감소합니다.
-3. **LLM은 프롬프트의 주변부에 있는 지시사항에 편향됩니다**: 맨 처음(에이전트 하네스 시스템 메시지와 `AGENTS.md`)과 맨 끝(가장 최근 사용자 메시지)
-4. **지시사항 수가 증가하면 지시사항 준수 품질이 균일하게 감소합니다.** 이것은 LLM에 더 많은 지시사항을 제공할 때, 단순히 새로운("파일 아래쪽에 있는") 지시사항을 무시하는 것이 아니라, **모든 지시사항을 균일하게 무시하기 시작한다**는 것을 의미합니다.
+Research shows:
 
-에이전트 하네스의 시스템 프롬프트에는 약 **50개의 개별 지시사항**이 포함되어 있습니다. 사용하는 모델에 따라, 이것은 에이전트가 안정적으로 따를 수 있는 지시사항의 거의 1/3입니다 - 그리고 이것은 규칙, 플러그인, 스킬 또는 사용자 메시지 이전입니다.
+1. **Frontier thinking LLMs can follow ~150-200 instructions with reasonable consistency.** Smaller models can pay attention to fewer instructions than larger models, and non-thinking models can pay attention to fewer instructions than thinking models.
+2. **Smaller models degrade much faster.** Specifically, smaller models tend to see exponential decreases in instruction-following performance as instruction count increases, while large frontier thinking models see linear decreases.
+3. **LLMs are biased toward instructions at the peripheries of prompts**: the very beginning (agent harness system message and `AGENTS.md`) and the very end (most recent user message).
+4. **Instruction-following quality degrades uniformly as instruction count increases.** This means that when you give an LLM more instructions, it doesn't simply ignore new ("further down the file") instructions — it **uniformly starts ignoring all instructions**.
 
-이것은 `AGENTS.md` 파일에 **가능한 한 적은 지시사항**을 포함해야 한다는 것을 의미합니다 - 이상적으로는 작업에 보편적으로 적용 가능한 것만 포함해야 합니다.
+Agent harness system prompts contain about **50 individual instructions**. Depending on your model, this is almost 1/3 of the instructions the agent can reliably follow — and that's before rules, plugins, skills, or user messages.
 
-### AGENTS.md 파일 길이 및 적용 가능성
+This means your `AGENTS.md` file should contain **as few instructions as possible** — ideally only things that are universally applicable to tasks.
 
-다른 모든 것이 동일하다면, **LLM은 컨텍스트 윈도우가 관련 없는 컨텍스트가 많은 경우보다 예제, 관련 파일, 도구 호출 및 도구 결과를 포함한 집중적이고 관련성 있는 컨텍스트로 가득 찬 경우 작업에서 더 잘 수행합니다.**
+### AGENTS.md File Length and Applicability
 
-`AGENTS.md`는 **모든 세션에 포함**되므로, 그 내용이 가능한 한 보편적으로 적용 가능해야 합니다.
+All else being equal, **LLMs perform better on tasks when the context window is filled with focused, relevant context including examples, relevant files, tool calls, and tool results, rather than lots of irrelevant context.**
 
-예를 들어, 새로운 데이터베이스 스키마를 구조화하는 방법에 대한 지시사항을 포함하지 마세요 - 이것은 중요하지 않으며 관련 없는 다른 작업을 할 때 모델을 산만하게 만들 것입니다!
+Since `AGENTS.md` is **included in every session**, its contents should be as universally applicable as possible.
 
-길이 측면에서도 **적을수록 좋은** 원칙이 적용됩니다. Anthropic이 `AGENTS.md` 파일이 얼마나 길어야 하는지에 대한 공식 권장사항은 없지만, 일반적인 합의는 **300줄 미만이 최선**이며, 더 짧을수록 더 좋습니다.
+For example, don't include instructions on how to structure new database schemas — this is not important and will distract the model when doing other unrelated tasks!
 
-HumanLayer에서는 루트 `AGENTS.md` 파일이 **60줄 미만**입니다.
+Length-wise, **less is also better**. While there's no official recommendation from Anthropic on how long `AGENTS.md` should be, general consensus is that **under 300 lines is best**, and shorter is better.
 
-### 점진적 공개 (Progressive Disclosure)
+HumanLayer's root `AGENTS.md` file is **under 60 lines**.
 
-에이전트가 알아야 할 모든 것을 다루는 간결한 `AGENTS.md` 파일을 작성하는 것은 어려울 수 있으며, 특히 더 큰 프로젝트에서는 더욱 그렇습니다.
+### Progressive Disclosure
 
-이를 해결하기 위해 **점진적 공개** 원칙을 활용하여 에이전트가 필요할 때만 작업 또는 프로젝트별 지시사항을 보도록 할 수 있습니다.
+Writing a concise `AGENTS.md` that covers everything the agent needs to know can be challenging, especially for larger projects.
 
-프로젝트 빌드, 테스트 실행, 코드 규칙 또는 기타 중요한 컨텍스트에 대한 모든 다른 지시사항을 `AGENTS.md` 파일에 포함하는 대신, 작업별 지시사항을 프로젝트 어딘가에 **자기 설명적인 이름을 가진 별도의 마크다운 파일**에 보관하는 것을 권장합니다.
+To solve this, leverage the principle of **progressive disclosure** to ensure agents only see task or project-specific instructions when they need them.
 
-예를 들어:
+Instead of including all other instructions on building the project, running tests, code conventions, or other important context in the `AGENTS.md` file, keep task-specific instructions in **separate markdown files somewhere in the project** with self-explanatory names.
+
+For example:
 
 ```
 agent_docs/
@@ -98,48 +107,46 @@ agent_docs/
   |- service_communication_patterns.md
 ```
 
-그런 다음 `AGENTS.md` 파일에서 이러한 파일 목록과 각 파일에 대한 간단한 설명을 포함하고, 에이전트가 작업을 시작하기 전에 관련된 파일(있는 경우)을 결정하고 읽도록 지시할 수 있습니다. 또는 에이전트가 읽기 전에 먼저 읽고 싶은 파일을 승인을 위해 제시하도록 요청할 수 있습니다.
+In your `AGENTS.md` file, include a list of these files with a brief description of each, and instruct the agent to determine which files (if any) are relevant and read them before starting work. Alternatively, ask the agent to present which files it wants to read for approval before reading them.
 
-**복사본보다 포인터를 선호합니다.** 가능하면 이러한 파일에 코드 스니펫을 포함하지 마세요 - 빠르게 오래된 정보가 될 것입니다. 대신, 에이전트가 권위 있는 컨텍스트를 가리키도록 `file:line` 참조를 포함하세요.
+**Prefer pointers over copies.** Avoid including code snippets in these files when possible — they quickly become stale. Instead, include `file:line` references so the agent can point to authoritative context.
 
-개념적으로 이것은 Claude Skills가 작동하도록 의도된 방식과 매우 유사하지만, 스킬은 지시사항보다 도구 사용에 더 집중합니다.
+### Agents Are Not (Expensive) Linters
 
-### 에이전트는 (비싼) 린터가 아닙니다
+One of the most common things people put in `AGENTS.md` is code style guidelines. **Never send an LLM to do a linter's job.** LLMs are relatively expensive and **massively slower** compared to traditional linters and formatters. **Always use deterministic tools** when possible.
 
-사람들이 `AGENTS.md` 파일에 넣는 가장 일반적인 것 중 하나는 코드 스타일 가이드라인입니다. **LLM을 린터의 일을 하도록 보내지 마세요.** LLM은 전통적인 린터 및 포맷터에 비해 비교적 비싸고 **엄청나게 느립니다**. 가능할 때마다 **결정론적 도구를 항상 사용**해야 한다고 생각합니다.
+Code style guidelines inevitably add instructions and mostly-irrelevant code snippets to the context window, degrading LLM performance and instruction following while consuming context window.
 
-코드 스타일 가이드라인은 필연적으로 지시사항과 대부분 관련 없는 코드 스니펫을 컨텍스트 윈도우에 추가하여 LLM의 성능과 지시사항 준수를 저하시키고 컨텍스트 윈도우를 소비합니다.
+**LLMs are in-context learners!** If your code follows specific style guidelines or patterns, an agent armed with a few searches (or a good research document!) from your codebase should tend to follow existing code patterns and conventions even without being told.
 
-**LLM은 컨텍스트 학습자입니다!** 코드가 특정 스타일 가이드라인 또는 패턴을 따르는 경우, 코드베이스의 몇 가지 검색(또는 좋은 연구 문서!)으로 무장한 에이전트는 지시받지 않아도 기존 코드 패턴과 규칙을 따르는 경향이 있어야 합니다.
+If you feel strongly about this, consider setting up agent harness stop hooks that run formatters and linters and present errors to the agent to fix. Don't make the agent find formatting issues directly.
 
-이것에 대해 매우 강하게 느낀다면, 포맷터와 린터를 실행하고 에이전트가 수정할 수 있도록 오류를 에이전트에 제시하는 에이전트 하네스 Stop 훅을 설정하는 것을 고려할 수도 있습니다. 에이전트가 포맷팅 문제를 직접 찾도록 하지 마세요.
+**Bonus points**: Use a linter that can auto-fix issues (we like Biome), and carefully tune rules for what can be safely auto-fixed for maximum (safe) coverage.
 
-**보너스 포인트**: 문제를 자동으로 수정할 수 있는 린터를 사용하고(우리는 Biome을 좋아합니다), 안전하게 자동 수정할 수 있는 것에 대한 규칙을 최대 (안전한) 커버리지를 위해 신중하게 조정하세요.
+### Don't Use /init or Auto-Generate AGENTS.md
 
-코드 가이드라인을 포함하고 에이전트를 버전 관리의 변경사항 또는 `git status` 등으로 가리키는 Slash Command를 만들 수도 있습니다. 이렇게 하면 구현과 포맷팅을 별도로 처리할 수 있습니다. **결과적으로 둘 다 더 나은 결과를 볼 수 있습니다**.
+Both Claude Code and other harnesses have ways to auto-generate `AGENTS.md` files.
 
-### /init을 사용하지 말거나 AGENTS.md를 자동 생성하지 마세요
+Because `AGENTS.md` is **included in every session**, it's **one of the highest leverage points** in the harness — for better or worse.
 
-Claude Code와 OpenCode를 사용하는 다른 하네스 모두 `AGENTS.md` 파일(또는 `AGENTS.md`)을 자동 생성하는 방법이 있습니다.
+A bad line of code is one bad line of code. A bad line in an implementation plan has the potential to create **many** bad lines of code. A bad line of research that misunderstands how a system works has the potential to create many bad lines in a plan, which in turn can create **even more** bad lines of code.
 
-`AGENTS.md`는 **모든 세션에 포함**되기 때문에, 하네스의 **가장 높은 영향력 지점 중 하나**입니다 - 사용 방법에 따라 더 좋거나 더 나쁠 수 있습니다.
+But `AGENTS.md` affects **every step of the workflow** and every artifact it produces. As a result, you should spend time thinking very carefully about **every single line** that goes into the file.
 
-나쁜 코드 한 줄은 나쁜 코드 한 줄입니다. 나쁜 구현 계획 한 줄은 **많은** 나쁜 코드 줄을 만들 수 있는 잠재력이 있습니다. 시스템 작동 방식을 오해하는 나쁜 연구 한 줄은 계획에 많은 나쁜 줄을 만들 수 있는 잠재력이 있으며, 결과적으로 **훨씬 더 많은** 나쁜 코드 줄을 만들 수 있습니다.
+---
 
-하지만 `AGENTS.md` 파일은 **워크플로우의 모든 단계**와 그것이 생성하는 모든 아티팩트에 영향을 미칩니다. 결과적으로, 파일에 들어가는 **모든 단일 줄**에 대해 매우 신중하게 생각하는 시간을 보내야 한다고 생각합니다.
+## Conclusion
 
-## 결론
+1. `AGENTS.md` is about onboarding agents to your codebase. Define the **WHY**, **WHAT**, and **HOW** of the project.
+2. **Fewer instructions are better.** You shouldn't omit necessary instructions, but include as few instructions as possible in the file.
+3. Keep `AGENTS.md` contents **concise and universally applicable**.
+4. Use **progressive disclosure** — don't tell the agent everything it might need to know. Instead, tell it **how to find important information** so it can find and use it as needed without bloating the context window or instruction count.
+5. Agents are not linters. Use linters and code formatters, and use features like Hooks and Slash Commands as needed.
+6. **`AGENTS.md` is the highest leverage point** in the harness, so don't auto-generate it. Contents should be carefully hand-written for best results.
 
-1. `AGENTS.md`는 에이전트를 코드베이스에 온보딩하는 것입니다. 프로젝트의 **WHY**, **WHAT**, **HOW**를 정의해야 합니다.
-2. **지시사항은 적을수록 좋습니다.** 필요한 지시사항을 생략해서는 안 되지만, 파일에 가능한 한 적은 지시사항을 포함해야 합니다.
-3. `AGENTS.md`의 내용을 **간결하고 보편적으로 적용 가능하게** 유지하세요.
-4. **점진적 공개**를 사용하세요 - 에이전트가 알아야 할 수 있는 모든 정보를 알려주지 마세요. 대신, 컨텍스트 윈도우나 지시사항 수를 부풀리지 않기 위해 필요할 때만 찾고 사용할 수 있도록 **중요한 정보를 찾는 방법**을 알려주세요.
-5. 에이전트는 린터가 아닙니다. 린터와 코드 포맷터를 사용하고, 필요에 따라 Hooks 및 Slash Commands와 같은 다른 기능을 사용하세요.
-6. **`AGENTS.md`는 하네스의 가장 높은 영향력 지점**이므로 자동 생성하지 마세요. 최상의 결과를 위해 내용을 신중하게 작성해야 합니다.
+---
 
-## 참고 자료
+## References
 
 - [HumanLayer: Writing a good CLAUDE.md](https://www.humanlayer.dev/blog/writing-a-good-claude-md)
-- [AGENTS.md 공식 사이트](https://agents.md/)
-- [Cursor Rules 문서](https://cursor.com/docs/context/rules)
-
+- [AGENTS.md Official Site](https://agents.md/)

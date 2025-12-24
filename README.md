@@ -1,65 +1,45 @@
 # rules
 
-프론트엔드 코드 품질 규칙 모음
+A collection of AGENTS.md files for AI coding agents.
 
-## 구조
+## Structure
 
 ```
-toss-frontend-fundamentals/                      # Frontend Fundamentals 기반
-├── README.md                                    # README.md
-├── AGENTS.md                                    # 코드 품질 철학 문서
-├── ACCESSIBILITY.md                             # 접근성 철학 문서
-└── .cursor/
-    └── rules/
-        ├── frontend-code-quality.mdc            # 코드 품질 규칙
-        └── accessibility.mdc                    # 접근성 규칙
+toss-frontend-fundamentals/           # Frontend code quality (Toss Frontend Fundamentals)
+├── README.md
+├── AGENTS.md                         # Readability, Predictability, Cohesion, Coupling
+└── ACCESSIBILITY.md                  # Accessibility guidelines
 
-playwright-e2e/                                  # Playwright 공식 문서 기반
-├── README.md                                    # README.md
-├── AGENTS.md                                    # E2E 테스트 철학 문서
-└── .cursor/
-    └── rules/
-        └── e2e-testing.mdc                      # E2E 테스트 규칙
+playwright-e2e/                       # E2E Testing (Playwright Best Practices)
+├── README.md
+└── AGENTS.md                         # Functional POM, Test Isolation, Locator Strategy
 
-meta-agents-rule/                                # Meta Agents Rule of Two 기반
-├── README.md                                    # README.md
-├── AGENTS.md                                    # Agents Rule of Two 철학 문서
-└── .cursor/
-    └── rules/
-        └── agents-rule-of-two.mdc               # Agents Rule of Two 규칙
+meta-agents-rule/                     # AI Agent Security (Meta Agents Rule of Two)
+├── README.md
+└── AGENTS.md                         # [A] Untrusted Inputs, [B] Sensitive Data, [C] State Changes
 
-openai-agents-guide/                             # OpenAI "A practical guide to building agents" 기반
-├── README.md                                    # README.md
-├── AGENTS.md                                    # 빌딩 에이전트 철학 문서
-└── .cursor/
-    └── rules/
-        └── building-agents.mdc                  # 빌딩 에이전트 규칙
+openai-agents-guide/                  # Agent Design (OpenAI Practical Guide)
+├── README.md
+└── AGENTS.md                         # Model, Tools, Instructions, Guardrails
 
-agents-md-guide/                                 # HumanLayer "Writing a good CLAUDE.md" 기반
-├── README.md                                    # README.md
-└── guide.md                                     # AGENTS.md 작성 가이드
+agents-md-guide/                      # AGENTS.md Writing Guide (HumanLayer)
+├── README.md
+└── guide.md                          # WHY, WHAT, HOW, Progressive Disclosure
 ```
 
-## Rules & Documentation
+## Documentation
 
-각 규칙 세트의 Cursor Rules와 Agents 기반 철학 문서:
-
-- **TOSS Frontend Fundamentals**
-  - [AGENTS.md](./toss-frontend-fundamentals/AGENTS.md) - 코드 품질 철학 문서
-  - [.cursor/rules/](./toss-frontend-fundamentals/.cursor/rules/) - Cursor 규칙 파일
+- **Toss Frontend Fundamentals**
+  - [AGENTS.md](./toss-frontend-fundamentals/AGENTS.md) - Frontend code quality principles
 - **Playwright E2E Testing**
-  - [AGENTS.md](./playwright-e2e/AGENTS.md) - E2E 테스트 철학 문서
-  - [.cursor/rules/](./playwright-e2e/.cursor/rules/) - Cursor 규칙 파일
+  - [AGENTS.md](./playwright-e2e/AGENTS.md) - E2E test writing rules
 - **Meta Agents Rule of Two**
-  - [AGENTS.md](./meta-agents-rule/AGENTS.md) - Agents Rule of Two 철학 문서
-  - [.cursor/rules/](./meta-agents-rule/.cursor/rules/) - Cursor 규칙 파일
+  - [AGENTS.md](./meta-agents-rule/AGENTS.md) - AI agent security framework
 - **OpenAI Practical Guide to Building Agents**
-  - [AGENTS.md](./openai-agents-guide/AGENTS.md) - 빌딩 에이전트 철학 문서
-  - [.cursor/rules/](./openai-agents-guide/.cursor/rules/) - Cursor 규칙 파일
-- **AGENTS.md 작성 가이드**
-  - [guide.md](./agents-md-guide/guide.md) - AGENTS.md 작성 가이드
+  - [AGENTS.md](./openai-agents-guide/AGENTS.md) - Agent design best practices
+- **AGENTS.md Writing Guide**
+  - [guide.md](./agents-md-guide/guide.md) - How to write effective AGENTS.md
 
-## 참고 자료
+## References
 
-- [Cursor Rules 문서](https://cursor.com/docs/context/rules)
 - [AGENTS.md](https://agents.md/)

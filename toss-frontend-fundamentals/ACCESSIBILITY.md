@@ -1,439 +1,358 @@
-# ACCESSIBILITY – 접근성 가이드
+# ACCESSIBILITY – A11y Guide
 
-이 프로젝트에서 접근성(a11y)의 목표는 **"역할(Role) · 이름(Label) · 상태(State)"가 항상 명확한 UI**를 만드는 것입니다.
+The goal of accessibility (a11y) in this project is to create **UI where Role, Label, and State are always clear**.
 
-아래 기준은 사람과 AI 모두가 컴포넌트를 작성·리팩토링할 때 따라야 하는 공통 규칙입니다.
+These guidelines apply to both humans and AI agents when building or refactoring components.
 
 ---
 
-## 1. 접근성 기본 원칙
+## 1. Core Accessibility Principles
 
-### 1-1. 역할(Role)
+### 1-1. Role
 
-- 가능한 한 **시맨틱 태그**를 먼저 사용합니다.
+- Use **semantic tags** first whenever possible.
+  - `<button>`, `<a>`, `<input>`, `<form>`, `<fieldset>`, `<legend>`, `<dialog>`, `<details>`, `<summary>`, etc.
 
-  - `<button>`, `<a>`, `<input>`, `<form>`, `<fieldset>`, `<legend>`, `<dialog>`, `<details>`, `<summary>` 등.
+- If semantic tags can't express it, specify with `role`.
+  - Examples: `role="tablist" | "tab" | "tabpanel" | "dialog" | "checkbox" | "radio" | "switch" | "button" | "region"`, etc.
 
-- 시맨틱 태그로 표현이 안 되면 `role`로 명시합니다.
+### 1-2. Label
 
-  - 예: `role="tablist" | "tab" | "tabpanel" | "dialog" | "checkbox" | "radio" | "switch" | "button" | "region"` 등.
+- All **interactive elements** (buttons, links, inputs, select components, etc.) must always have a name that explains "what this is".
+- Priority: `aria-labelledby` → `aria-label` → `<label>`/element text.
+- If visual text sufficiently explains the meaning, ARIA can be omitted.
+- **Icon-only buttons / switches / toggles** require `aria-label` or `aria-labelledby`.
 
-### 1-2. 레이블(Label)
+### 1-3. State
 
-- 모든 **인터랙티브 요소**(버튼, 링크, 인풋, 선택 컴포넌트 등)는 항상 "이게 뭔지"를 설명하는 이름을 가져야 합니다.
-- 우선순위: `aria-labelledby` → `aria-label` → `<label>`/요소 텍스트.
-- 시각 텍스트가 충분히 의미를 설명하면 ARIA는 생략해도 됩니다.
-- **아이콘만 있는 버튼 / 스위치 / 토글**은 `aria-label` 또는 `aria-labelledby`로 필수 레이블을 부여합니다.
-
-### 1-3. 상태(State)
-
-- 상태는 **HTML 기본 속성**과 **ARIA 상태 속성**을 혼용하되, 항상 동기화합니다.
-- 자주 쓰는 속성
-
+- Use both **HTML native attributes** and **ARIA state attributes**, always keeping them in sync.
+- Commonly used attributes:
   - `checked` / `aria-checked`
   - `selected` / `aria-selected`
   - `open` / `aria-expanded`
   - `disabled` / `aria-disabled`
-  - `aria-current` (현재 페이지/날짜 등)
+  - `aria-current` (current page/date, etc.)
 
-### 1-4. 라이브 리전(Live Region)
+### 1-4. Live Regions
 
-동적으로 변경되는 콘텐츠를 스크린 리더에 알려주기 위해 라이브 리전을 사용합니다:
+Use live regions to announce dynamically changing content to screen readers:
 
-- **`aria-live`**: 콘텐츠 변경 시 스크린 리더가 읽어줌
+- **`aria-live`**: Screen reader announces when content changes
+  - `aria-live="polite"`: Announces after current content is finished (general updates)
+  - `aria-live="assertive"`: Announces immediately (urgent errors, important alerts)
 
-  - `aria-live="polite"`: 현재 읽고 있는 내용이 끝난 후 알림 (일반적인 업데이트)
-  - `aria-live="assertive"`: 즉시 알림 (긴급한 오류, 중요 알림)
+- **`role="alert"`**: Equivalent to `aria-live="assertive"` + `aria-atomic="true"`. For error messages, urgent alerts.
 
-- **`role="alert"`**: `aria-live="assertive"` + `aria-atomic="true"`와 동일. 오류 메시지, 긴급 알림에 사용.
+- **`role="status"`**: Equivalent to `aria-live="polite"` + `aria-atomic="true"`. For status updates, success messages.
 
-- **`role="status"`**: `aria-live="polite"` + `aria-atomic="true"`와 동일. 상태 업데이트, 성공 메시지에 사용.
+- **`aria-busy`**: Indicates content is loading. When `true`, screen reader holds off on change announcements.
 
-- **`aria-busy`**: 콘텐츠가 로딩 중임을 알림. `true`일 때 스크린 리더가 변경 알림을 보류.
+- **`aria-atomic`**: When `true`, reads the entire region, not just changed parts.
 
-- **`aria-atomic`**: `true`이면 변경된 부분만이 아닌 전체 영역을 읽음.
-
-예시:
+Examples:
 
 ```tsx
-// 폼 제출 결과 알림
+// Form submission result notification
 <div role="status" aria-live="polite">
-  {submitSuccess && "저장되었습니다."}
+  {submitSuccess && "Saved successfully."}
 </div>
 
-// 오류 메시지
+// Error message
 <div role="alert">
   {errorMessage}
 </div>
 
-// 로딩 상태
+// Loading state
 <div aria-busy={isLoading} aria-live="polite">
-  {isLoading ? "로딩 중..." : content}
+  {isLoading ? "Loading..." : content}
 </div>
 ```
 
-### 1-5. 키보드 탐색
+### 1-5. Keyboard Navigation
 
-- Tab/Shift+Tab, Enter, Space, 방향키로 UI를 조작할 수 있게 만듭니다.
-- **커스텀 인터랙티브 요소**를 만들면:
+- Make UI operable with Tab/Shift+Tab, Enter, Space, and arrow keys.
+- When creating **custom interactive elements**:
+  - Add `tabIndex={0}`
+  - Set `role`
+  - Handle Enter / Space in `onKeyDown`
 
-  - `tabIndex={0}` 부여
-  - `role` 설정
-  - `onKeyDown`에서 Enter / Space 처리
+### 1-6. Don't Rely Solely on Visual Information
 
-### 1-6. 시각 정보에만 의존하지 않기
-
-- 색/아이콘/이미지로만 정보가 전달되면 안 됩니다.
-- 항상 **텍스트 또는 ARIA 레이블**로 보완합니다.
-- 의미 없는 장식 이미지는 `alt=""`로 처리해서 낭독을 막습니다.
+- Information must not be conveyed only through color/icons/images.
+- Always supplement with **text or ARIA labels**.
+- Mark decorative images with `alt=""` to prevent screen reader announcement.
 
 ---
 
-## 2. UI 컴포넌트별 규칙
+## 2. UI Component Rules
 
-### 2-1. 탭(Tab)
+### 2-1. Tabs
 
-**목표:** 스크린 리더가 "탭 목록 / 현재 탭 / 해당 패널" 구조를 정확히 이해하게 만들 것.
+**Goal:** Make screen readers accurately understand the "tab list / current tab / corresponding panel" structure.
 
-- 구조
+- Structure:
+  - Tab list container: `role="tablist"` + `aria-label` or `aria-labelledby`
+  - Tab button: `role="tab"`
+    - Current tab: `aria-selected="true"`
+    - Other tabs: `aria-selected="false"`
+  - Tab panel: `role="tabpanel"`
+    - `id` required
+    - Tab button has `aria-controls="<tabpanel-id>"`
+    - Tab panel has `aria-labelledby="<tab-id>"`
 
-  - 탭 리스트 컨테이너: `role="tablist"` + `aria-label` 또는 `aria-labelledby`
-  - 탭 버튼: `role="tab"`
+- Show/hide:
+  - **Only active panel** is actually visible; hide others with `hidden` or `aria-hidden`/CSS.
+  - Always sync `aria-selected` value with **panel visibility**.
 
-    - 현재 탭: `aria-selected="true"`
-    - 나머지 탭: `aria-selected="false"`
+- Keyboard:
+  - Implement arrow key (left/right) navigation between tabs by default.
+  - Tab/Shift+Tab for entering/exiting the entire tab group.
 
-  - 탭 패널: `role="tabpanel"`
+### 2-2. Accordion
 
-    - `id` 필수
-    - 탭 버튼에서 `aria-controls="<tabpanel-id>"`
-    - 탭 패널에서 `aria-labelledby="<tab-id>"`
+**Goal:** Make it clear which item is expanded.
 
-- 표시/숨김
-
-  - **활성 패널만** 실제로 보이게 하고, 나머지는 `hidden` 또는 `aria-hidden`/CSS로 숨깁니다.
-  - `aria-selected` 값과 **패널의 표시 여부를 항상 동기화**합니다.
-
-- 키보드
-
-  - 방향키(좌/우)로 탭 이동 가능하게 구현하는 것을 기본 방향으로 합니다.
-  - Tab/Shift+Tab은 탭 그룹 전체를 빠져나가거나 진입하는 용도로.
-
-### 2-2. 아코디언(Accordion)
-
-**목표:** 어떤 항목이 펼쳐져 있는지 명확히 알 수 있도록.
-
-- 가능하면 **HTML 표준 요소 사용 우선**
-
+- **Prefer HTML standard elements first**:
   - `<details>` + `<summary>`
+    - `open` attribute represents state
+    - `onToggle` for state management
 
-    - `open` 속성으로 상태 표현
-    - `onToggle`로 상태 관리
-
-- 커스텀 구현 시 규칙
-
-  - 헤더(토글 버튼)
-
-    - `<button>` 사용
+- Custom implementation rules:
+  - Header (toggle button):
+    - Use `<button>`
     - `aria-expanded={isOpen}`
     - `aria-controls="<panel-id>"`
-
-  - 패널
-
+  - Panel:
     - `id="<panel-id>"`
     - `role="region"`
     - `aria-labelledby="<button-id>"`
     - `hidden={!isOpen}`
 
-- 상태 동기화
+- State synchronization:
+  - `aria-expanded="true"` ↔ panel visible
+  - `aria-expanded="false"` ↔ panel hidden
+  - These must never be out of sync.
 
-  - `aria-expanded="true"` ↔ 패널 표시
-  - `aria-expanded="false"` ↔ 패널 숨김
-    → 이 둘이 다르면 안 됩니다.
+### 2-3. Modal/Dialog
 
-### 2-3. 모달(Modal/Dialog)
+**Goal:** When modal is open, **user focus and screen reader attention stay only within the modal**.
 
-**목표:** 모달이 열려 있으면 **사용자 포커스와 스크린 리더 관심이 모달 안에만 머무르게** 할 것.
+- When `<dialog>` is available (preferred):
+  - Trigger button: `aria-haspopup="dialog"`
+  - Open with `dialog.showModal()`
+  - Close with `dialog.close()`
+  - Provide title via `aria-labelledby` or `aria-label`
+  - Browser automatically handles:
+    - Focus moves inside modal
+    - Focus trap
+    - ESC to close
+    - Focus returns to original element on close
 
-- `<dialog>` 사용 가능한 경우 (우선)
-
-  - 트리거 버튼: `aria-haspopup="dialog"`
-  - `dialog.showModal()`로 열기
-  - `dialog.close()`로 닫기
-  - `aria-labelledby` 또는 `aria-label`로 제목 제공
-  - 브라우저가 자동으로:
-
-    - 포커스 모달 내부로 이동
-    - 포커스 트랩
-    - ESC로 닫기
-    - 닫힐 때 원래 포커스로 복귀
-
-- `<dialog>` 못 쓸 때 (커스텀 모달)
-
-  - 모달 컨테이너
-
+- When `<dialog>` can't be used (custom modal):
+  - Modal container:
     - `role="dialog"`
     - `aria-modal="true"`
-    - `aria-labelledby="<title-id>"` 또는 `aria-label="..."`
+    - `aria-labelledby="<title-id>"` or `aria-label="..."`
+  - Focus management:
+    - On modal open: move to first focusable element inside
+    - On modal close: return focus to trigger
+  - ESC handling:
+    - Close when `e.key === "Escape"` in `keydown` event
+  - Background content:
+    - Add `inert` to main area when modal is open
+    - Remove `inert` when closed
+  - Focus trap:
+    - Tab/Shift+Tab cycles only within the modal
 
-  - 포커스 관리
+### 2-4. Radio Buttons
 
-    - 모달 열릴 때: 내부 첫 포커스 가능한 요소로 이동
-    - 모달 닫힐 때: 열었던 트리거로 포커스 복귀
+**Goal:** Make the "select 1 answer from multiple options for one question" structure clear.
 
-  - ESC 핸들링
-
-    - `keydown` 이벤트에서 `e.key === "Escape"`이면 닫기
-
-  - 배경 콘텐츠
-
-    - 모달 열려 있을 때 메인 영역에 `inert` 부여
-    - 닫히면 `inert` 제거
-
-  - 포커스 트랩
-
-    - Tab/Shift+Tab으로 포커스가 모달 안에서만 순환되게 합니다.
-
-### 2-4. 라디오 버튼(Radio)
-
-**목표:** "하나의 질문에 여러 답변 중 1개 선택" 구조를 명확히.
-
-- 기본 구조 (권장)
-
-  - 컨테이너: `<fieldset>`
-  - 그룹 제목: `<legend>`
-  - 각 옵션:
-
+- Basic structure (recommended):
+  - Container: `<fieldset>`
+  - Group title: `<legend>`
+  - Each option:
     - `<input type="radio" name="...">`
-    - `<label htmlFor="...">옵션명</label>`
+    - `<label htmlFor="...">Option text</label>`
 
-- 대안 구조
+- Alternative structure:
+  - If `<fieldset>` can't be used:
+    - Container: `role="radiogroup"` + `aria-labelledby="<heading-id>"`
+    - Still use `<input type="radio" name=".."> + <label>` inside
 
-  - `<fieldset>`을 쓸 수 없으면:
+- Required rules:
+  - **Same group has same name** (browser automatically ensures "select only 1").
+  - Each option **always connected to label** (`id` + `htmlFor`).
 
-    - 컨테이너: `role="radiogroup"` + `aria-labelledby="<heading-id>"`
-    - 내부는 여전히 `<input type="radio" name=".."> + <label>` 사용
-
-- 필수 규칙
-
-  - **같은 그룹은 name 동일** (브라우저가 자동으로 "1개만 선택" 보장).
-  - 각 옵션은 **항상 레이블과 연결** (`id` + `htmlFor`).
-
-- 커스텀 라디오 (input 미사용)
-
-  - 각 옵션:
-
+- Custom radio (without input):
+  - Each option:
     - `role="radio"`
     - `aria-checked={true|false}`
-    - `tabIndex={0}` (최소 1개 이상)
-    - Space 키로 선택 토글 (`onKeyDown` 처리)
-
-  - 그룹:
-
+    - `tabIndex={0}` (at least one)
+    - Space key to toggle selection (`onKeyDown` handling)
+  - Group:
     - `role="radiogroup"` + `aria-labelledby`
 
-### 2-5. 체크박스(Checkbox)
+### 2-5. Checkbox
 
-**목표:** 여러 개를 동시에 선택할 수 있는 옵션 그룹을 명확히.
+**Goal:** Make it clear that multiple options can be selected simultaneously.
 
-- 그룹이 있는 경우
-
-  - 컨테이너: `<fieldset>`
-  - 제목: `<legend>`
-  - 각 항목:
-
+- When there's a group:
+  - Container: `<fieldset>`
+  - Title: `<legend>`
+  - Each item:
     - `<input type="checkbox" id="..." />`
-    - `<label htmlFor="...">텍스트</label>`
+    - `<label htmlFor="...">Text</label>`
 
-- 커스텀 체크박스
-
+- Custom checkbox:
   - `role="checkbox"`
   - `aria-checked={true|false}`
   - `tabIndex={0}`
-  - Space 키로 체크/언체크 (`onKeyDown`)
+  - Space key to check/uncheck (`onKeyDown`)
 
-### 2-6. 스위치(Switch)
+### 2-6. Switch
 
-**목표:** 켜짐/꺼짐 상태를 명확히 전달.
+**Goal:** Clearly convey on/off state.
 
-- HTML 기반 스위치
-
+- HTML-based switch:
   - `<input type="checkbox" role="switch" checked={isOn} />`
-  - 라벨:
+  - Label:
+    - Wrap with `<label>`, or
+    - Provide via `aria-label` / `aria-labelledby`
 
-    - `<label>`로 감싸거나
-    - `aria-label` / `aria-labelledby`로 제공
-
-- 커스텀 스위치
-
+- Custom switch:
   - `role="switch"`
   - `aria-checked={isOn}`
   - `tabIndex={0}`
-  - Space 키로 상태 변경
-  - 레이블 필수
-
-    - "무엇을 켜고 끄는지"를 설명 (예: `"다크 모드"`, `"알림 설정"`)
+  - Space key to change state
+  - Label required
+    - Explain "what is being turned on/off" (e.g., `"Dark mode"`, `"Notification settings"`)
 
 ---
 
-## 3. 실전 패턴 규칙
+## 3. Practical Pattern Rules
 
-### 3-1. 버튼 안에 버튼/링크 넣지 않기
+### 3-1. Don't Nest Buttons/Links Inside Buttons
 
-- 금지
+- Prohibited:
+  - `<button>` inside `<button>`
+  - `<button>` inside `<a>`
+  - `<a>` inside `<button>`
 
-  - `<button>` 안에 `<button>`
-  - `<a>` 안에 `<button>`
-  - `<button>` 안에 `<a>`
+- Solutions:
+  - **Polymorphic button** pattern:
+    - `<Button as="a" href="/...">Text</Button>`
+  - "Entire card click + individual buttons inside" pattern:
+    - Outer is `div` + invisible button for full-area click
+    - Individual buttons are separate actual `<button>` elements
+    - Focus style with `.wrapper:focus-within { … }`
 
-- 해결
+### 3-2. Don't Make Table Rows Directly Clickable
 
-  - **폴리모픽 버튼** 패턴 사용
-
-    - `<Button as="a" href="/...">텍스트</Button>`
-
-  - "카드 전체 클릭 + 내부 개별 버튼" 패턴
-
-    - 바깥은 `div` + 가상의 투명 버튼으로 전체 영역 클릭 처리
-    - 개별 버튼은 별도의 실제 `<button>`으로 두기
-    - 포커스 스타일은 `.wrapper:focus-within { … }`로 처리
-
-### 3-2. 테이블 행을 직접 클릭 가능하게 만들지 않기
-
-- 금지
-
+- Prohibited:
   - `<tr onClick={...}>`
 
-- 해결
+- Solution:
+  - Put **actual `<a>` link** inside the row, expand area with CSS:
+    - Link has `position: relative` + `::after { position: absolute; inset: 0; content: "" }`
+  - Benefits:
+    - Preserves keyboard focus, context menu (open in new tab, copy link), etc.
+    - Screen reader recognizes it as "link"
 
-  - 행 안에 **실제 `<a>` 링크**를 넣고, CSS로 영역 확장
+### 3-3. Label Interactive Elements
 
-    - 링크에 `position: relative` + `::after { position: absolute; inset: 0; content: "" }`
+- Basic rule:
+  - All inputs/buttons/select elements **always have a name**.
 
-  - 장점
+- Input fields:
+  - Prefer `<label for="id">` + `<input id="id">`
+  - Use `aria-label` if visual label can't be placed
+  - Use `aria-labelledby` when reusing nearby text
 
-    - 키보드 포커스, context menu(새 탭 열기, 링크 복사) 등 기본 기능 유지
-    - 스크린 리더에 "링크"로 인식
+- Buttons/Icons:
+  - Text button: inner text is the label
+  - Icon button: `aria-label` required
 
-### 3-3. 인터랙티브 요소에 이름 붙이기
+- Select:
+  - `<label>` + `<select id="...">` structure by default
 
-- 기본 룰
+- Placeholder:
+  - **Not a label substitute**, only for hints
+  - Always use with a label
 
-  - 모든 입력/버튼/선택 요소는 **항상 이름을 가집니다**.
+### 3-4. Multiple Buttons with Same Name
 
-- 입력 필드
+- Example: "Select" button repeated in each list item
+- Rule:
+  - Create "context text" for each item and connect to button
+  - Pattern example:
+    - List item: `<li aria-labelledby="title-id">`
+    - Title text: `<div id="title-id">When using paper</div>`
+    - Button: `id="paper-button" aria-labelledby="title-id paper-button"`
+  - Or make button `aria-label="Select when using paper"` format
 
-  - 우선 `<label for="id">` + `<input id="id">`
-  - 시각 레이블을 둘 수 없으면 `aria-label`
-  - 주변 텍스트를 재사용할 때 `aria-labelledby`
+### 3-5. Match Button Role and Behavior
 
-- 버튼/아이콘
+- Prohibited:
+  - Using `<div onClick>` with just `cursor: pointer` as a button
 
-  - 텍스트 버튼이면 내부 텍스트가 레이블
-  - 아이콘 버튼이면 `aria-label` 필수
+- Default:
+  - Use `<button>` whenever possible.
 
-- Select
-
-  - `<label>` + `<select id="...">` 구조 기본
-
-- placeholder
-
-  - **레이블 대체용 X**, 힌트 용도로만 사용
-  - 항상 레이블과 같이 사용
-
-### 3-4. 같은 이름의 버튼이 여러 개 있을 때
-
-- 예: "선택" 버튼이 리스트마다 반복될 때
-- 룰
-
-  - 각 항목에 "맥락 텍스트"를 만들고, 이를 버튼과 연결
-  - 패턴 예:
-
-    - 리스트 아이템: `<li aria-labelledby="title-id">`
-    - 제목 텍스트: `<div id="title-id">종이를 사용할 경우</div>`
-    - 버튼: `id="paper-button" aria-labelledby="title-id paper-button"`
-
-  - 또는 버튼에 `aria-label="종이를 사용할 경우 선택"` 형식으로 구체화
-
-### 3-5. 버튼의 역할과 동작을 일치시키기
-
-- 금지
-
-  - 단순 `<div onClick>`에 `cursor: pointer`만 주고 버튼처럼 쓰는 것
-
-- 기본
-
-  - 가능하면 무조건 `<button>` 사용.
-
-- 꼭 `<div>` 등으로 해야 한다면:
-
+- If you must use `<div>` etc.:
   - `role="button"`
   - `tabIndex={0}`
-  - `onKeyDown`에서 Enter / Space 시 클릭 처리
+  - Handle Enter / Space click in `onKeyDown`
 
-### 3-6. 입력 요소는 항상 `<form>`으로 감싸기
+### 3-6. Always Wrap Input Elements in `<form>`
 
-- 기본
+- Default:
+  - Put related input groups inside `<form>`.
+  - Submit button is `<button type="submit">`.
+  - Simple click buttons **must** specify `type="button"`.
 
-  - 관련 입력 그룹은 `<form>` 안에 넣습니다.
-  - submit 버튼은 `<button type="submit">`.
-  - 단순 클릭용 버튼은 **반드시** `type="button"` 명시.
+- Behavior:
+  - When handling in JS:
+    - Call `event.preventDefault()` in `onSubmit`, then execute logic.
+  - Screen reader:
+    - Provide form name via `aria-label` or `<form aria-labelledby="...">`.
 
-- 동작
+- Submit button outside form:
+  - Connect with `form="form-id"` attribute on button.
 
-  - JS에서 처리할 때:
+- Auxiliary buttons (clear input, etc.):
+  - Exclude from focus order with `tabIndex="-1"` if focus isn't needed, describe role with `aria-label`.
 
-    - `onSubmit`에서 `event.preventDefault()` 호출 후 로직 실행.
+### 3-7. Image / Icon Alt Text
 
-  - 스크린 리더:
+- Principle:
+  - Write alt based on "What **information** or **function** is this image conveying to the user?"
 
-    - `aria-label` 또는 `<form aria-labelledby="...">`로 폼 이름 제공.
+- Cases where alt is required:
+  - Image is **the only content of a link/button** → describe function in alt
+  - Contains **core information** like product/graph/chart → summarize content
 
-- 폼 밖에 있는 submit 버튼
+- Cases where alt should be empty (`alt=""`):
+  - Decorative images (simple dividers, backgrounds, etc.)
+  - Nearby text/caption already explains the same content
+  - Icon with text (delete icon + "Delete" text, etc.)
 
-  - 버튼에 `form="form-id"` 속성으로 연결.
-
-- 보조 버튼(입력값 삭제 등)
-
-  - 꼭 포커스가 필요하지 않은 보조 버튼은 `tabIndex="-1"`로 포커스 순서에서 제외하고, `aria-label`로 역할 설명.
-
-### 3-7. 이미지 / 아이콘 대체 텍스트(alt)
-
-- 원칙
-
-  - "이 이미지가 **사용자에게 전달하려는 정보** 또는 **기능**이 무엇인가?"를 기준으로 alt를 씁니다.
-
-- 반드시 alt가 필요한 경우
-
-  - 이미지가 **링크/버튼의 유일한 내용**일 때 → alt로 기능 설명
-  - 상품/그래프/차트 등 **핵심 정보**를 담은 경우 → 내용 요약
-
-- alt를 비워야 하는 경우 (`alt=""`)
-
-  - 장식용 이미지 (단순 구분선, 배경 등)
-  - 같은 내용을 주변 텍스트/캡션이 이미 설명하는 경우
-  - 텍스트와 함께 있는 아이콘 (삭제 아이콘 + "삭제" 텍스트 등)
-
-- 작성 방식
-
-  - 불필요한 단어(`아이콘`, `버튼`) 제거
-
-    - 스크린 리더가 어차피 "버튼"을 붙여 읽습니다.
-
-  - 맥락 기반으로 작성
-
-    - `"이전 페이지로 이동"`, `"다음 페이지로 이동"` 등 기능/의도 기준
+- Writing style:
+  - Remove unnecessary words (`icon`, `button`)
+    - Screen reader already adds "button"
+  - Write based on context
+    - `"Go to previous page"`, `"Go to next page"` etc. based on function/intent
 
 ---
 
-## 4. eslint-plugin-jsx-a11y 설정
+## 4. eslint-plugin-jsx-a11y Configuration
 
-JSX/React 코드에서 접근성 위반을 자동으로 잡기 위해 필수로 켜둘 규칙들.
+Essential rules to auto-catch accessibility violations in JSX/React code.
 
-### 4-1. 기본 설정
+### 4-1. Basic Setup
 
 ```ts
-// eslint.config.js (flat config 예시)
+// eslint.config.js (flat config example)
 import jsxA11y from "eslint-plugin-jsx-a11y";
 
 export default [
@@ -441,53 +360,45 @@ export default [
   {
     rules: {
       "jsx-a11y/control-has-associated-label": "error",
-      // 다른 규칙들은 필요 시 여기에 명시적으로 추가/조정
+      // Add/adjust other rules as needed
     },
   },
 ];
 ```
 
-### 4-2. 주요 규칙 요약
+### 4-2. Key Rules Summary
 
 - `alt-text`
-
-  - `<img>`는 항상 `alt`가 있어야 합니다.
-  - 정보 없는 장식 이미지: `alt=""`.
-  - 텍스트와 함께 있는 아이콘: `alt=""` 권장.
+  - `<img>` must always have `alt`.
+  - Decorative images with no info: `alt=""`.
+  - Icons with text: `alt=""` recommended.
 
 - `control-has-associated-label`
-
-  - 모든 컨트롤(인풋, 버튼, Select 등)에 연관 레이블이 있어야 합니다.
-  - 폼 관련 마크업은:
-
+  - All controls (inputs, buttons, selects, etc.) must have an associated label.
+  - Form-related markup must have at least one of:
     - `<label>` + `<input>`
     - `aria-label`
     - `aria-labelledby`
-    - 중 하나 이상을 갖도록 구현.
 
 - `no-noninteractive-element-interactions`
-
-  - `<div>`, `<span>` 같은 비상호작용 요소에 `onClick` 등을 사용하면 경고.
-  - 반드시 `role`/`tabIndex`를 넣어 상호작용 요소임을 명시하거나, 아예 `<button>`, `<a>`로 바꿀 것.
+  - Warns when `onClick` etc. used on non-interactive elements like `<div>`, `<span>`.
+  - Must add `role`/`tabIndex` to indicate it's interactive, or change to `<button>`, `<a>`.
 
 - `no-noninteractive-element-to-interactive-role`
-
-  - `<main>`, `<ul>`, `<li>`, `<img>` 등 의미 있는 컨테이너에 `role="button"` 같은 상호작용 역할을 부여하면 안 됩니다.
-  - 진짜 상호작용이 필요하면 `<button>`, `<a>`를 사용.
+  - Don't assign interactive roles like `role="button"` to semantic containers like `<main>`, `<ul>`, `<li>`, `<img>`.
+  - Use `<button>`, `<a>` if real interaction is needed.
 
 - `no-noninteractive-tabindex`
-
-  - 비상호작용 요소에 `tabIndex`를 주지 말 것.
-  - 정말 포커스/인터랙션이 필요하면 `role`과 함께 상호작용 요소로 승격.
+  - Don't give `tabIndex` to non-interactive elements.
+  - If focus/interaction is really needed, upgrade to interactive element with `role`.
 
 - `tabindex-no-positive`
+  - `tabIndex > 0` prohibited.
+  - Allowed values: only `0` or `-1`.
 
-  - `tabIndex > 0` 금지.
-  - 허용 값: `0` 또는 `-1`만 사용.
+### 4-3. Integration with Design Systems / Polymorphic Components
 
-### 4-3. 디자인 시스템/폴리모픽 컴포넌트와 연동
-
-#### 컴포넌트 매핑
+#### Component Mapping
 
 ```ts
 export default [
@@ -508,9 +419,9 @@ export default [
 ];
 ```
 
-- 이렇게 하면 `<MyButton>`/`<MyTxt>`에도 `<button>`/`<span>`의 a11y 규칙이 동일 적용.
+- This applies the same a11y rules to `<MyButton>`/`<MyTxt>` as `<button>`/`<span>`.
 
-#### 폴리모픽 as prop
+#### Polymorphic as prop
 
 ```ts
 export default [
@@ -532,9 +443,9 @@ export default [
 ];
 ```
 
-- `<MyButton as="a" href="/home">`처럼 다양한 태그로 렌더링되는 컴포넌트에서 a11y 규칙이 제대로 동작하도록 설정.
+- Ensures a11y rules work correctly for components that render as different tags like `<MyButton as="a" href="/home">`.
 
-#### 커스텀 레이블 prop 지원
+#### Custom Label Prop Support
 
 ```ts
 export default [
@@ -544,7 +455,7 @@ export default [
       "jsx-a11y/control-has-associated-label": [
         "error",
         {
-          labelAttributes: ["contents"], // 예: <MyCard contents="카드 내용" />
+          labelAttributes: ["contents"], // e.g., <MyCard contents="Card content" />
         },
       ],
     },
@@ -564,13 +475,19 @@ export default [
 
 ---
 
-## 5. 새 컴포넌트 작성 시 체크리스트
+## 5. New Component Checklist
 
-에이전트/개발자는 새 컴포넌트를 만들 때 다음을 반드시 확인합니다:
+Agents/developers must verify the following when creating new components:
 
-1. **역할(Role)**: 시맨틱 태그를 사용했는가? 필요시 `role`을 명시했는가?
-2. **레이블(Label)**: 모든 인터랙티브 요소에 이름이 있는가?
-3. **상태(State)**: 상태 속성이 HTML/ARIA와 동기화되어 있는가?
-4. **키보드 탐색**: Tab, Enter, Space, 방향키로 조작 가능한가?
-5. **시각 의존성**: 색/아이콘만으로 정보를 전달하지 않았는가?
-6. **eslint-plugin-jsx-a11y**: 설정된 규칙을 위반하지 않았는가?
+1. **Role**: Did you use semantic tags? Did you specify `role` when needed?
+2. **Label**: Do all interactive elements have names?
+3. **State**: Are state attributes synchronized between HTML/ARIA?
+4. **Keyboard Navigation**: Is it operable with Tab, Enter, Space, arrow keys?
+5. **Visual Dependency**: Is information not conveyed only through color/icons?
+6. **eslint-plugin-jsx-a11y**: Does it not violate configured rules?
+
+---
+
+## References
+
+- [A11y Fundamentals](https://frontend-fundamentals.com/a11y/) by Toss

@@ -1,108 +1,106 @@
 # AGENTS – OpenAI Practical Guide to Building Agents
 
-이 문서는 OpenAI의 **“A practical guide to building agents”**를 기반으로  
-에이전트를 처음 설계·구축할 때 따라야 할 핵심 원칙과 베스트 프랙티스를 정리합니다.
+This document summarizes core principles and best practices for designing and building agents, based on OpenAI's **"A practical guide to building agents"**.
 
-핵심 목표:
+Core Goals:
 
-1. 에이전트가 **스스로 워크플로우를 실행**하고, 필요 시 도구를 선택·조합할 수 있도록 설계합니다.
-2. **모델·툴·지시문**의 3요소와 **오케스트레이션/가드레일**을 체계적으로 구성합니다.
-3. 안전성과 사용자 경험을 함께 확보하기 위해 **레이어드 가드레일**과 **인간 개입** 경로를 마련합니다.
-
----
-
-## 1. 에이전트 정의와 범위
-
-- 단순 챗봇·단일 턴 모델과 달리, 에이전트는 **LLM이 워크플로우 실행을 주도**하며 도구를 호출하고 종료 조건을 스스로 판단합니다.
-- 핵심 특징
-  - **LLM 기반 실행 제어**: 완료 여부 판단, 실패 시 중단/재시도, 필요 시 사용자에게 제어 반환
-  - **다양한 도구 사용**: 컨텍스트 수집/행동 수행을 위해 도구를 선택적으로 호출하며, 명확한 가드레일 아래서 동작
-
-## 2. 언제 에이전트를 선택할까
-
-- **복잡한 의사결정**: 예외·맥락 의존 판단이 많아 규칙 엔진이 취약할 때
-- **규칙 유지보수 난이도 상승**: 방대한 if-else/룰셋이 품질을 떨어뜨릴 때
-- **비정형 데이터 의존**: 자연어/문서/대화 기반 처리가 핵심일 때
-- 위 조건이 불명확하면 **전통적 결정적 자동화**가 더 적합할 수 있습니다.
-
-## 3. 핵심 컴포넌트와 런 루프
-
-- **Model**: 추론·의사결정의 두뇌
-- **Tools**: 외부 시스템과 상호작용하는 함수/API/에이전트
-- **Instructions**: 역할, 톤, 툴 사용 규칙, 종료 조건을 명시
-- **런 루프(while-loop)**: 모델 응답을 반복 실행하며 종료 조건까지 진행
-  - 종료 조건 예시: **최종 출력 툴 호출**, **모델 응답에 툴 호출 없음**, **에러/턴 한도 초과**
-- 권장 흐름: **가장 강력한 모델 + 최소한의 필수 도구**로 베이스라인을 만든 후, 점진적 최적화
-
-## 4. 모델 선택 원칙
-
-1. **에발/테스트**로 정확도 기준선을 먼저 확보 (가장 강력한 모델 사용)
-2. 기준선을 충족한 뒤 **더 작은/빠른 모델로 대체**하여 비용·지연시간 최적화
-3. 태스크 복잡도에 따라 **모델 믹스**를 고려 (간단한 분류/검색 ↔ 복잡한 판단)
-
-## 5. 도구 설계
-
-- **표준화된 정의**: 이름, 설명, 파라미터, 반환 스키마를 명확히 하고 재사용성을 높입니다.
-- **세 가지 도구 유형**
-  - **Data**: 컨텍스트 수집 (DB/CRM 조회, 문서 읽기, 웹 검색)
-  - **Action**: 외부 상태 변경 (메시지 전송, 레코드 업데이트, 티켓 핸드오프)
-  - **Orchestration**: 다른 에이전트를 툴로 노출 (예: Research/Refund/Writer agent)
-- **리스크 레이팅**: 도구마다 읽기/쓰기, 되돌릴 수 있음 여부, 권한/금전 영향으로 **Low/Med/High** 지정 → High일수록 추가 확인/가드레일/인간 승인
-- **테스트·문서화**: 발견 가능한 카탈로그로 관리하고, 중복 정의를 피합니다.
-
-## 6. 지시문(Instructions) 베스트 프랙티스
-
-- **기존 운영 문서 활용**: SOP/지원 스크립트/정책 문서를 LLM 친화적 단계로 변환
-- **작게 쪼개기**: 복잡한 지침은 번호 있는 단계로 분리해 모호성을 제거
-- **명확한 행동 정의**: 각 스텝은 “무엇을 질문/확인/실행해야 하는가”를 구체화
-- **엣지 케이스 포함**: 정보 부족/예상치 못한 요청 시의 분기 지침을 넣습니다.
-- **모델을 활용한 자동 생성**: o1, o3-mini 등으로 정책 문서를 지시문으로 변환해 초안을 얻고, 사람이 검수
-
-## 7. 오케스트레이션 패턴
-
-- **싱글 에이전트 우선**: 도구를 단계적으로 추가하며 복잡도 최소화. 프롬프트 템플릿에 정책 변수를 주입해 재사용성을 확보.
-- **멀티 에이전트 전환 시점**
-  - **복잡한 분기/조건**이 많아 프롬프트 스케일이 어려울 때
-  - **도구 과부하/중복**으로 모델이 잘못된 툴을 선택할 때
-- **대표 패턴**
-  - **Manager (agents-as-tools)**: 중앙 매니저가 전문 에이전트를 툴 호출로 오케스트레이션하고 결과를 통합
-  - **Decentralized handoff**: 동등한 에이전트들이 필요 시 **핸드오프** 도구로 제어를 넘기며, 대화 상태를 함께 이전
-- **그래프 선언보다 코드 우선**: 불필요한 DSL 없이 일반 코드로 분기/루프를 표현해 유연성을 유지
-
-## 8. 가드레일 (레이어드 방어)
-
-- **입력/출력/툴 호출** 단계마다 가드레일을 겹쳐 적용
-- 주요 유형
-  - **Relevance**: 스코프 이탈 감지
-  - **Safety**: Jailbreak/프롬프트 인젝션 탐지
-  - **PII 필터**: 불필요한 개인 정보 노출 방지
-  - **Moderation**: 유해 콘텐츠 차단
-  - **Tool safeguards**: 도구 리스크별 승인/차단/휴먼 검토 트리거
-  - **Rules-based**: 입력 길이, 블랙리스트, 정규식 필터
-  - **Output validation**: 브랜드/정책 일치 여부 검증
-- **낙관적 실행 + 트립와이어**: 주 에이전트는 실행을 진행하되, 가드레일 함수/에이전트가 병렬로 검사해 위반 시 예외를 발생시킵니다.
-- **적용 휴리스틱**: (1) 데이터 프라이버시·콘텐츠 안전 우선, (2) 실사용에서 발견된 엣지 케이스를 빠르게 추가, (3) 보안·UX 균형을 맞추며 조정
-
-## 9. 인간 개입 (Human-in-the-loop)
-
-- **실패 한계 초과**: 재시도/행동 횟수 초과 시 사용자 또는 운영자에게 승인을 요청하거나 제어를 반환
-- **고위험 행동**: 취소/환불/결제/민감 데이터 쓰기 등은 초기에는 항상 인간 승인 후 실행
-- **스무스한 전환**: 에이전트가 완료하지 못할 때 graceful하게 사람에게 컨텍스트를 전달하고 종료
-
-## 10. 실무 체크리스트
-
-1) **적합성 확인**: 복잡한 판단·규칙 피로·비정형 데이터 여부 점검  
-2) **모델 베이스라인**: 가장 강력한 모델로 에발 기준선 확보 후 다운스케일 테스트  
-3) **툴 카탈로그**: Data/Action/Orchestration 구분, 리스크 등급 부여  
-4) **지시문 품질**: 기존 문서 → 단계화된 numbered instructions, 엣지 케이스 포함  
-5) **오케스트레이션**: 싱글 에이전트 런 루프부터, 필요 시 Manager/핸드오프 패턴으로 확장  
-6) **가드레일**: Relevance/Safety/PII/Moderation + Tool safeguards + 규칙 기반 필터  
-7) **휴먼-인-더-루프**: 실패 임계치·고위험 액션에 대한 승인/에스컬레이션 경로 설정
+1. Design agents that can **autonomously execute workflows** and select/combine tools as needed.
+2. Systematically configure the **three components (Model, Tools, Instructions)** along with **orchestration and guardrails**.
+3. Establish **layered guardrails** and **human-in-the-loop** pathways to ensure both safety and user experience.
 
 ---
 
-## 참고 자료
+## 1. Agent Definition and Scope
 
-- OpenAI, “A practical guide to building agents” (2025)
+- Unlike simple chatbots or single-turn models, agents have **LLMs drive workflow execution**, calling tools and determining termination conditions autonomously.
+- Key characteristics:
+  - **LLM-based execution control**: Decides completion, stops/retries on failure, returns control to user when needed
+  - **Diverse tool usage**: Selectively calls tools for context gathering/action execution, operating within clear guardrails
+
+## 2. When to Choose Agents
+
+- **Complex decision-making**: When exceptions and context-dependent judgments make rule engines fragile
+- **Increasing rule maintenance difficulty**: When massive if-else/rule sets degrade quality
+- **Unstructured data dependency**: When natural language/document/conversation-based processing is core
+- If these conditions are unclear, **traditional deterministic automation** may be more suitable.
+
+## 3. Core Components and Run Loop
+
+- **Model**: The brain for reasoning and decision-making
+- **Tools**: Functions/APIs/agents that interact with external systems
+- **Instructions**: Specify role, tone, tool usage rules, and termination conditions
+- **Run loop (while-loop)**: Iteratively executes model responses until termination conditions
+  - Termination examples: **Final output tool call**, **Model response without tool calls**, **Error/turn limit exceeded**
+- Recommended flow: Create baseline with **strongest model + minimal necessary tools**, then optimize incrementally
+
+## 4. Model Selection Principles
+
+1. Establish accuracy baseline with **evals/tests** first (use strongest model)
+2. After meeting baseline, **swap to smaller/faster models** to optimize cost/latency
+3. Consider **model mix** based on task complexity (simple classification/search ↔ complex judgment)
+
+## 5. Tool Design
+
+- **Standardized definitions**: Clearly define name, description, parameters, return schema; maximize reusability.
+- **Three tool types**:
+  - **Data**: Context gathering (DB/CRM queries, document reading, web search)
+  - **Action**: External state changes (message sending, record updates, ticket handoff)
+  - **Orchestration**: Expose other agents as tools (e.g., Research/Refund/Writer agent)
+- **Risk rating**: Assign **Low/Med/High** per tool based on read/write, reversibility, permission/financial impact → Higher ratings require additional confirmation/guardrails/human approval
+- **Test & document**: Manage as discoverable catalog, avoid duplicate definitions.
+
+## 6. Instructions Best Practices
+
+- **Leverage existing operational docs**: Convert SOPs/support scripts/policy docs to LLM-friendly steps
+- **Break down into small pieces**: Separate complex instructions into numbered steps to eliminate ambiguity
+- **Define clear actions**: Each step specifies "what to ask/verify/execute"
+- **Include edge cases**: Add branching instructions for insufficient info/unexpected requests
+- **Use models for auto-generation**: Use o1, o3-mini etc. to convert policy docs to instructions as drafts, then human review
+
+## 7. Orchestration Patterns
+
+- **Single agent first**: Add tools incrementally, minimize complexity. Inject policy variables into prompt templates for reusability.
+- **When to switch to multi-agent**:
+  - When **complex branching/conditions** make prompt scaling difficult
+  - When **tool overload/overlap** causes model to select wrong tools
+- **Representative patterns**:
+  - **Manager (agents-as-tools)**: Central manager orchestrates specialist agents via tool calls, integrates results
+  - **Decentralized handoff**: Equal agents pass control via **handoff** tools as needed, transferring conversation state together
+- **Code over graph declarations**: Express branching/loops in regular code without unnecessary DSLs for flexibility
+
+## 8. Guardrails (Layered Defense)
+
+- Apply guardrails layered at **input/output/tool call** stages
+- Key types:
+  - **Relevance**: Detect scope drift
+  - **Safety**: Detect jailbreak/prompt injection
+  - **PII filter**: Prevent unnecessary personal info exposure
+  - **Moderation**: Block harmful content
+  - **Tool safeguards**: Trigger approval/block/human review based on tool risk
+  - **Rules-based**: Input length, blacklists, regex filters
+  - **Output validation**: Verify brand/policy compliance
+- **Optimistic execution + tripwires**: Main agent proceeds with execution while guardrail functions/agents check in parallel; raise exceptions on violations
+- **Application heuristics**: (1) Prioritize data privacy & content safety, (2) Rapidly add edge cases discovered in real usage, (3) Adjust balancing security vs. UX
+
+## 9. Human-in-the-Loop
+
+- **Failure threshold exceeded**: Request user/operator approval or return control when retry/action counts exceeded
+- **High-risk actions**: Initially always require human approval before execution for cancellation/refunds/payments/sensitive data writes
+- **Smooth transitions**: When agent can't complete, gracefully hand context to human and terminate
+
+## 10. Practical Checklist
+
+1. **Fitness check**: Examine complex judgment, rule fatigue, unstructured data needs
+2. **Model baseline**: Establish eval baseline with strongest model, then test downscaling
+3. **Tool catalog**: Categorize Data/Action/Orchestration, assign risk ratings
+4. **Instruction quality**: Transform existing docs → numbered step instructions, include edge cases
+5. **Orchestration**: Start with single agent run loop, expand to Manager/handoff patterns when needed
+6. **Guardrails**: Relevance/Safety/PII/Moderation + Tool safeguards + rule-based filters
+7. **Human-in-the-loop**: Set approval/escalation paths for failure thresholds and high-risk actions
+
+---
+
+## References
+
+- OpenAI, "A practical guide to building agents" (2025)
   - <https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf>
-
