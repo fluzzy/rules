@@ -16,9 +16,15 @@ AI 코딩 에이전트를 위한 규칙과 가이드 모음. Claude 중심으로
 │   ├── playwright-e2e.md             # E2E 테스트 규칙
 │   └── meta-agents-rule.md           # AI 에이전트 보안 규칙
 │
-└── guides/                           # 가이드
-    ├── agents-md.md                  # AGENTS.md 작성 가이드
-    └── openai-agents.md              # 에이전트 디자인 가이드
+├── guides/                           # 가이드
+│   ├── agents-md.md                  # AGENTS.md 작성 가이드
+│   └── openai-agents.md              # 에이전트 디자인 가이드
+│
+├── skills/                           # 에이전트 스킬
+│   └── vercel-agent-skills.md        # Vercel 에이전트 스킬
+│
+└── showcase/                         # 활용 사례 및 예제
+    └── claude-code-showcase.md       # Claude Code 설정 예제
 ```
 
 ## Rules
@@ -43,3 +49,15 @@ AI 코딩 에이전트를 위한 규칙과 가이드 모음. Claude 중심으로
 | [Official Servers](./mcp/official-servers.md) | MCP 공식 레퍼런스 서버    |
 | [Context7](./mcp/context7.md)                 | 최신 라이브러리 문서 제공 |
 | [Task-Master](./mcp/task-master.md)           | AI 기반 작업 관리 시스템  |
+
+## Skills
+
+| 스킬                                                               | 설명                                                                          |
+| ------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| [Vercel Agent Skills](./skills/vercel-agent-skills.md)             | AI 코딩 에이전트 스킬 모음 (React 베스트 프랙티스, UI 가이드라인, Vercel 배포) |
+
+## Showcase
+
+| 프로젝트                                                     | 설명                                                                |
+| ------------------------------------------------------------ | ------------------------------------------------------------------- |
+| [Claude Code Showcase](./showcase/claude-code-showcase.md)   | Claude Code 에이전트 활용을 위한 종합 설정 예제 (스킬, MCP, 워크플로우) |
