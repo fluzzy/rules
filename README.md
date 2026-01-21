@@ -1,63 +1,65 @@
 # AI Rules & Guides
 
-AI 코딩 에이전트를 위한 규칙과 가이드 모음. Claude 중심으로 사용.
+A collection of rules and guides for AI coding agents. Primarily used with Claude.
 
-## 디렉토리 구조
+## Directory Structure
 
 ```
-├── mcp/                              # MCP 서버 문서
-│   ├── official-servers.md           # 공식 레퍼런스 서버
-│   ├── sequential-thinking.md        # 순차적 사고 서버
-│   ├── context7.md                   # 최신 라이브러리 문서
-│   └── task-master.md                # 작업 관리 시스템
+├── mcp/                              # MCP server documentation
+│   ├── official-servers.md           # Official reference servers
+│   ├── sequential-thinking.md        # Sequential thinking server
+│   ├── context7.md                   # Up-to-date library documentation
+│   └── task-master.md                # Task management system
 │
-├── rules/                            # 코딩 규칙
-│   ├── toss-frontend-fundamentals.md # 프론트엔드 코드 품질
-│   ├── playwright-e2e.md             # E2E 테스트 규칙
-│   └── meta-agents-rule.md           # AI 에이전트 보안 규칙
+├── rules/                            # Coding rules
+│   ├── toss-frontend-fundamentals.md # Frontend code quality
+│   ├── playwright-e2e.md             # E2E testing rules
+│   └── meta-agents-rule.md           # AI agent security rules
 │
-├── guides/                           # 가이드
-│   ├── agents-md.md                  # AGENTS.md 작성 가이드
-│   └── openai-agents.md              # 에이전트 디자인 가이드
+├── guides/                           # Guides
+│   ├── agents-md.md                  # AGENTS.md writing guide
+│   ├── good-spec.md                  # How to write good specs
+│   └── openai-agents.md              # Agent design guide
 │
-├── skills/                           # 에이전트 스킬
-│   └── vercel-agent-skills.md        # Vercel 에이전트 스킬
+├── skills/                           # Agent skills
+│   └── vercel-agent-skills.md        # Vercel agent skills
 │
-└── showcase/                         # 활용 사례 및 예제
-    └── claude-code-showcase.md       # Claude Code 설정 예제
+└── showcase/                         # Use cases and examples
+    └── claude-code-showcase.md       # Claude Code configuration examples
 ```
 
 ## Rules
 
-| 규칙                                                                | 설명                        |
-| ------------------------------------------------------------------- | --------------------------- |
-| [Toss Frontend Fundamentals](./rules/toss-frontend-fundamentals.md) | 프론트엔드 코드 품질 원칙   |
-| [Playwright E2E](./rules/playwright-e2e.md)                         | E2E 테스트 작성 규칙        |
-| [Meta Agents Rule](./rules/meta-agents-rule.md)                     | AI 에이전트 보안 프레임워크 |
+| Rule                                                                | Description                      |
+| ------------------------------------------------------------------- | -------------------------------- |
+| [Toss Frontend Fundamentals](./rules/toss-frontend-fundamentals.md) | Frontend code quality principles |
+| [Playwright E2E](./rules/playwright-e2e.md)                         | E2E testing rules                |
+| [Meta Agents Rule](./rules/meta-agents-rule.md)                     | AI agent security framework      |
 
 ## Guides
 
-| 가이드                                           | 설명                            |
-| ------------------------------------------------ | ------------------------------- |
-| [AGENTS.md Guide](./guides/agents-md.md)         | 효과적인 AGENTS.md 작성법       |
-| [OpenAI Agents Guide](./guides/openai-agents.md) | 에이전트 디자인 베스트 프랙티스 |
+| Guide                                            | Description                          |
+| ------------------------------------------------ | ------------------------------------ |
+| [AGENTS.md Guide](./guides/agents-md.md)         | Effective AGENTS.md writing          |
+| [Good Spec Guide](./guides/good-spec.md)         | How to write good specs for AI agents |
+| [OpenAI Agents Guide](./guides/openai-agents.md) | Agent design best practices          |
 
 ## MCP Servers
 
-| 서버                                          | 설명                      |
-| --------------------------------------------- | ------------------------- |
-| [Official Servers](./mcp/official-servers.md) | MCP 공식 레퍼런스 서버    |
-| [Context7](./mcp/context7.md)                 | 최신 라이브러리 문서 제공 |
-| [Task-Master](./mcp/task-master.md)           | AI 기반 작업 관리 시스템  |
+| Server                                        | Description                       |
+| --------------------------------------------- | --------------------------------- |
+| [Official Servers](./mcp/official-servers.md) | MCP official reference servers    |
+| [Context7](./mcp/context7.md)                 | Up-to-date library documentation  |
+| [Task-Master](./mcp/task-master.md)           | AI-powered task management system |
 
 ## Skills
 
-| 스킬                                                               | 설명                                                                          |
-| ------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
-| [Vercel Agent Skills](./skills/vercel-agent-skills.md)             | AI 코딩 에이전트 스킬 모음 (React 베스트 프랙티스, UI 가이드라인, Vercel 배포) |
+| Skill                                                              | Description                                                                |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| [Vercel Agent Skills](./skills/vercel-agent-skills.md)             | AI coding agent skills (React best practices, UI guidelines, Vercel deploy) |
 
 ## Showcase
 
-| 프로젝트                                                     | 설명                                                                |
-| ------------------------------------------------------------ | ------------------------------------------------------------------- |
-| [Claude Code Showcase](./showcase/claude-code-showcase.md)   | Claude Code 에이전트 활용을 위한 종합 설정 예제 (스킬, MCP, 워크플로우) |
+| Project                                                      | Description                                                              |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| [Claude Code Showcase](./showcase/claude-code-showcase.md)   | Comprehensive Claude Code agent configuration examples (skills, MCP, workflows) |

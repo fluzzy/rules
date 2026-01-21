@@ -1,14 +1,14 @@
-# MCP 공식 서버 모음 (Official Reference Servers)
+# MCP Official Reference Servers
 
 > **Source**: https://github.com/modelcontextprotocol/servers
 > **Registry**: https://registry.modelcontextprotocol.io
 > **Archive Date**: 2026-01-19
 
-Model Context Protocol (MCP)의 레퍼런스 구현 및 커뮤니티 서버 모음.
+Reference implementations and community servers for Model Context Protocol (MCP).
 
-## MCP SDK 목록
+## MCP SDK List
 
-| 언어       | SDK                                                                      |
+| Language   | SDK                                                                      |
 | ---------- | ------------------------------------------------------------------------ |
 | TypeScript | [typescript-sdk](https://github.com/modelcontextprotocol/typescript-sdk) |
 | Python     | [python-sdk](https://github.com/modelcontextprotocol/python-sdk)         |
@@ -21,19 +21,19 @@ Model Context Protocol (MCP)의 레퍼런스 구현 및 커뮤니티 서버 모�
 | Ruby       | [ruby-sdk](https://github.com/modelcontextprotocol/ruby-sdk)             |
 | PHP        | [php-sdk](https://github.com/modelcontextprotocol/php-sdk)               |
 
-## 🌟 Reference Servers
+## Reference Servers
 
-| Server                                                                                                  | 설명                            | NPX 명령어                                                |
-| ------------------------------------------------------------------------------------------------------- | ------------------------------- | --------------------------------------------------------- |
-| [Everything](https://github.com/modelcontextprotocol/servers/blob/main/src/everything)                  | 테스트용 프롬프트, 리소스, 도구 | `npx -y @modelcontextprotocol/server-everything`          |
-| [Fetch](https://github.com/modelcontextprotocol/servers/blob/main/src/fetch)                            | 웹 콘텐츠 가져오기 및 변환      | `npx -y @modelcontextprotocol/server-fetch`               |
-| [Filesystem](https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem)                  | 파일 작업 및 접근 제어          | `npx -y @modelcontextprotocol/server-filesystem`          |
-| [Git](https://github.com/modelcontextprotocol/servers/blob/main/src/git)                                | Git 저장소 조작                 | `uvx mcp-server-git`                                      |
-| [Memory](https://github.com/modelcontextprotocol/servers/blob/main/src/memory)                          | 지식 그래프 기반 메모리         | `npx -y @modelcontextprotocol/server-memory`              |
-| [Sequential Thinking](https://github.com/modelcontextprotocol/servers/blob/main/src/sequentialthinking) | 순차적 문제 해결                | `npx -y @modelcontextprotocol/server-sequential-thinking` |
-| [Time](https://github.com/modelcontextprotocol/servers/blob/main/src/time)                              | 시간 및 타임존 변환             | `npx -y @modelcontextprotocol/server-time`                |
+| Server                                                                                                  | Description                              | NPX Command                                               |
+| ------------------------------------------------------------------------------------------------------- | ---------------------------------------- | --------------------------------------------------------- |
+| [Everything](https://github.com/modelcontextprotocol/servers/blob/main/src/everything)                  | Prompts, resources, tools for testing    | `npx -y @modelcontextprotocol/server-everything`          |
+| [Fetch](https://github.com/modelcontextprotocol/servers/blob/main/src/fetch)                            | Fetch and convert web content            | `npx -y @modelcontextprotocol/server-fetch`               |
+| [Filesystem](https://github.com/modelcontextprotocol/servers/blob/main/src/filesystem)                  | File operations and access control       | `npx -y @modelcontextprotocol/server-filesystem`          |
+| [Git](https://github.com/modelcontextprotocol/servers/blob/main/src/git)                                | Git repository manipulation              | `uvx mcp-server-git`                                      |
+| [Memory](https://github.com/modelcontextprotocol/servers/blob/main/src/memory)                          | Knowledge graph-based memory             | `npx -y @modelcontextprotocol/server-memory`              |
+| [Sequential Thinking](https://github.com/modelcontextprotocol/servers/blob/main/src/sequentialthinking) | Sequential problem solving               | `npx -y @modelcontextprotocol/server-sequential-thinking` |
+| [Time](https://github.com/modelcontextprotocol/servers/blob/main/src/time)                              | Time and timezone conversion             | `npx -y @modelcontextprotocol/server-time`                |
 
-## 사용 예시 (Claude Desktop)
+## Usage Example (Claude Desktop)
 
 ```json
 {
@@ -60,7 +60,7 @@ Model Context Protocol (MCP)의 레퍼런스 구현 및 커뮤니티 서버 모�
 
 ## Resources
 
-- [MCP 공식 문서](https://modelcontextprotocol.io/)
+- [MCP Official Documentation](https://modelcontextprotocol.io/)
 - [MCP Registry](https://registry.modelcontextprotocol.io/)
 - [MCP Specification](https://spec.modelcontextprotocol.io/)
 

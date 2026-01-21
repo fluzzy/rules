@@ -3,87 +3,87 @@
 > **Source**: https://github.com/vercel-labs/agent-skills
 > **Archive Date**: 2026-01-19
 
-AI 코딩 에이전트의 기능을 확장하는 스킬 모음. Agent Skills 형식을 따르며, 설치 후 에이전트가 관련 작업 감지 시 자동 활용.
+A collection of skills that extend AI coding agent capabilities. Follows the Agent Skills format; once installed, agents automatically use them when detecting relevant tasks.
 
-## 설치
+## Installation
 
 ```bash
 npx add-skill vercel-labs/agent-skills
 ```
 
-## 스킬 목록
+## Skill List
 
 ### 1. react-best-practices
 
-React와 Next.js 성능 최적화 가이드라인.
+React and Next.js performance optimization guidelines.
 
-**특징:**
+**Features:**
 
-- 40개 이상의 규칙, 8개 범주로 분류
-- 영향도 기준 우선순위화
+- 40+ rules, categorized into 8 areas
+- Prioritized by impact level
 
-**사용 시점:**
+**When to use:**
 
-- React 컴포넌트나 Next.js 페이지 작성
-- 클라이언트/서버 측 데이터 페칭 구현
-- 성능 문제 코드 검토
-- 번들 크기/로딩 시간 최적화
+- Writing React components or Next.js pages
+- Implementing client/server-side data fetching
+- Reviewing code for performance issues
+- Optimizing bundle size/loading time
 
-**범주:**
+**Categories:**
 
-- 워터폴 제거
-- 번들 최적화
-- 서버 성능
-- 클라이언트 데이터 페칭
-- 리렌더링 최적화
+- Waterfall elimination
+- Bundle optimization
+- Server performance
+- Client data fetching
+- Re-render optimization
 
 ### 2. web-design-guidelines
 
-UI 코드가 웹 인터페이스 모범 사례를 준수하는지 검토.
+Review whether UI code follows web interface best practices.
 
-**특징:**
+**Features:**
 
-- 100개 이상의 규칙 감사
-- 접근성, 성능, UX 포함
+- Audits 100+ rules
+- Covers accessibility, performance, UX
 
-**사용 시점:**
+**When to use:**
 
-- "UI 검토해줘"
-- "접근성 확인"
-- "모범 사례 검사"
+- "Review my UI"
+- "Check accessibility"
+- "Run best practices check"
 
-**범주:**
+**Categories:**
 
-- 접근성
-- 포커스 상태
-- 폼
-- 애니메이션
-- 타이포그래피
-- 이미지
-- 다크 모드
-- 터치 상호작용
+- Accessibility
+- Focus states
+- Forms
+- Animations
+- Typography
+- Images
+- Dark mode
+- Touch interactions
 
 ### 3. vercel-deploy-claimable
 
-애플리케이션을 Vercel에 즉시 배포.
+Deploy applications to Vercel instantly.
 
-**특징:**
+**Features:**
 
-- 40개 이상 프레임워크 자동 감지
-- 프리뷰 URL 및 클레임 URL 반환
-- 정적 HTML 자동 처리
+- Auto-detects 40+ frameworks
+- Returns preview URL and claim URL
+- Auto-handles static HTML
 
-**사용 시점:**
+**When to use:**
 
-- "앱 배포해줘"
-- "프로덕션에 배포"
+- "Deploy my app"
+- "Deploy to production"
 
-**작동 방식:**
+**How it works:**
 
-1. 프로젝트 타르볼 패키징
-2. 프레임워크 감지
-3. 업로드
-4. URL 반환
+1. Package project tarball
+2. Detect framework
+3. Upload
+4. Return URLs
 
 ## License
 

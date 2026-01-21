@@ -1,7 +1,7 @@
 # Showcase
 
-AI 에이전트 활용 사례 및 종합 설정 예제.
+AI agent use cases and comprehensive configuration examples.
 
-| 파일                                                   | 설명                                                                | 원본                                                         |
-| ------------------------------------------------------ | ------------------------------------------------------------------- | ------------------------------------------------------------ |
-| [claude-code-showcase.md](./claude-code-showcase.md)   | Claude Code 에이전트 활용을 위한 종합 설정 예제 (스킬, MCP, 워크플로우) | [GitHub](https://github.com/ChrisWiles/claude-code-showcase) |
+| File                                                   | Description                                                               | Source                                                       |
+| ------------------------------------------------------ | ------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| [claude-code-showcase.md](./claude-code-showcase.md)   | Comprehensive Claude Code agent configuration examples (skills, MCP, workflows) | [GitHub](https://github.com/ChrisWiles/claude-code-showcase) |

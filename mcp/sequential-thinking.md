@@ -3,48 +3,48 @@
 > **Source**: https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking
 > **Archive Date**: 2026-01-19
 
-구조화된 사고 프로세스를 통해 동적이고 반성적인 문제 해결을 위한 도구를 제공하는 MCP 서버 구현.
+An MCP server implementation that provides a tool for dynamic and reflective problem-solving through structured thinking processes.
 
 ## Features
 
-- 복잡한 문제를 관리 가능한 단계로 분해
-- 이해가 깊어지면 생각을 수정하고 다듬기
-- 대안적 추론 경로로 분기
-- 생각의 총 수를 동적으로 조정
-- 솔루션 가설 생성 및 검증
+- Break down complex problems into manageable steps
+- Revise and refine thoughts as understanding deepens
+- Branch into alternative reasoning paths
+- Dynamically adjust total number of thoughts
+- Generate and verify solution hypotheses
 
 ## Tool: sequential_thinking
 
-문제 해결 및 분석을 위한 상세한 단계별 사고 프로세스를 촉진.
+Facilitates detailed step-by-step thinking processes for problem-solving and analysis.
 
-**입력값:**
+**Input parameters:**
 
-- `thought` (string): 현재 사고 단계
-- `nextThoughtNeeded` (boolean): 다른 사고 단계가 필요한지 여부
-- `thoughtNumber` (integer): 현재 사고 번호
-- `totalThoughts` (integer): 필요한 총 사고 수 추정
-- `isRevision` (boolean, optional): 이전 사고를 수정하는지 여부
-- `revisesThought` (integer, optional): 재고 중인 사고
-- `branchFromThought` (integer, optional): 분기점 사고 번호
-- `branchId` (string, optional): 분기 식별자
-- `needsMoreThoughts` (boolean, optional): 더 많은 사고가 필요한지 여부
+- `thought` (string): Current thinking step
+- `nextThoughtNeeded` (boolean): Whether another thought step is needed
+- `thoughtNumber` (integer): Current thought number
+- `totalThoughts` (integer): Estimated total thoughts needed
+- `isRevision` (boolean, optional): Whether this revises previous thinking
+- `revisesThought` (integer, optional): Which thought is being reconsidered
+- `branchFromThought` (integer, optional): Branching point thought number
+- `branchId` (string, optional): Branch identifier
+- `needsMoreThoughts` (boolean, optional): If more thoughts are needed
 
 ## Usage
 
-Sequential Thinking 도구 사용 사례:
+Sequential Thinking tool use cases:
 
-- 복잡한 문제를 단계로 분해
-- 수정 여지가 있는 계획 및 설계
-- 방향 수정이 필요할 수 있는 분석
-- 전체 범위가 처음에 명확하지 않은 문제
-- 여러 단계에 걸쳐 컨텍스트를 유지해야 하는 작업
-- 관련 없는 정보를 필터링해야 하는 상황
+- Breaking down complex problems into steps
+- Planning and design with room for revision
+- Analysis that might need course correction
+- Problems where full scope isn't initially clear
+- Tasks that need to maintain context over multiple steps
+- Situations where irrelevant information needs filtering
 
 ## Configuration
 
 ### Claude Desktop
 
-`claude_desktop_config.json`에 추가:
+Add to `claude_desktop_config.json`:
 
 ```json
 {

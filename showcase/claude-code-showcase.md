@@ -3,72 +3,72 @@
 > **Source**: https://github.com/ChrisWiles/claude-code-showcase
 > **Archive Date**: 2026-01-19
 
-Claude Code 에이전트를 팀의 슈퍼파워 동료로 만들기 위한 종합 설정 예제. 재사용 가능한 스킬, 에이전트, 훅을 통해 일관되고 체계적인 개발 워크플로우 구축.
+A comprehensive configuration example for making Claude Code agent your team's superpower colleague. Build consistent, systematic development workflows through reusable skills, agents, and hooks.
 
-## 디렉토리 구조
+## Directory Structure
 
 ```
 .claude/
-├── settings.json        # 훅, 환경변수, 권한 설정
-├── settings.md          # 설정 문서
-├── agents/              # 커스텀 AI 에이전트
-├── commands/            # 슬래시 커맨드 (/명령어)
-├── hooks/               # 자동화 스크립트
-├── skills/              # 도메인 지식 문서
-└── rules/               # 모듈식 지침
+├── settings.json        # Hooks, environment variables, permissions
+├── settings.md          # Settings documentation
+├── agents/              # Custom AI agents
+├── commands/            # Slash commands (/command)
+├── hooks/               # Automation scripts
+├── skills/              # Domain knowledge documents
+└── rules/               # Modular instructions
 
-.mcp.json               # MCP 서버 설정 (JIRA, GitHub 등)
-CLAUDE.md               # 프로젝트 메모리
+.mcp.json               # MCP server config (JIRA, GitHub, etc.)
+CLAUDE.md               # Project memory
 ```
 
-## 핵심 구성 요소
+## Core Components
 
-### 1. CLAUDE.md - 프로젝트 메모리
+### 1. CLAUDE.md - Project Memory
 
-세션 시작 시 자동 로드되는 영구 컨텍스트.
+Persistent context that auto-loads at session start.
 
-**포함 내용:**
+**Contents:**
 
-- 프로젝트 스택 및 아키텍처
-- 테스트, 빌드, 린트 명령어
-- 코드 스타일 가이드라인
-- 중요 디렉토리 설명
+- Project stack and architecture
+- Test, build, lint commands
+- Code style guidelines
+- Important directory descriptions
 
-**위치 우선순위:**
+**Location priority:**
 
 1. `.claude/CLAUDE.md`
-2. `./CLAUDE.md` (프로젝트 루트)
-3. `~/.claude/CLAUDE.md` (사용자 레벨)
+2. `./CLAUDE.md` (project root)
+3. `~/.claude/CLAUDE.md` (user level)
 
-### 2. settings.json - 훅과 환경
+### 2. settings.json - Hooks and Environment
 
-자동화된 품질 관리를 위한 중앙 설정.
+Central configuration for automated quality control.
 
-**주요 훅 이벤트:**
+**Main hook events:**
 
-| 이벤트             | 발동 시점       | 활용                     |
-| ------------------ | --------------- | ------------------------ |
-| `PreToolUse`       | 도구 실행 전    | 메인 브랜치 편집 차단    |
-| `PostToolUse`      | 도구 완료 후    | 자동 포매팅, 테스트 실행 |
-| `UserPromptSubmit` | 프롬프트 제출 시 | 컨텍스트 추가, 스킬 제안 |
-| `Stop`             | 에이전트 종료 시 | 계속 실행 여부 결정      |
+| Event              | Trigger Time         | Use Case                       |
+| ------------------ | -------------------- | ------------------------------ |
+| `PreToolUse`       | Before tool execution | Block main branch edits        |
+| `PostToolUse`      | After tool completion | Auto-format, run tests         |
+| `UserPromptSubmit` | On prompt submission  | Add context, suggest skills    |
+| `Stop`             | On agent termination  | Decide whether to continue     |
 
-**훅 응답 형식:**
+**Hook response format:**
 
 ```json
 {
   "block": true,
-  "message": "이유",
-  "feedback": "정보",
+  "message": "reason",
+  "feedback": "info",
   "continue": false
 }
 ```
 
-### 3. MCP 서버 - 외부 통합
+### 3. MCP Servers - External Integrations
 
-Model Context Protocol을 통해 JIRA, GitHub, Slack 등과 연결.
+Connect with JIRA, GitHub, Slack, etc. via Model Context Protocol.
 
-**.mcp.json 구조:**
+**.mcp.json structure:**
 
 ```json
 {
@@ -76,7 +76,7 @@ Model Context Protocol을 통해 JIRA, GitHub, Slack 등과 연결.
     "server-name": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "패키지명"],
+      "args": ["-y", "package-name"],
       "env": {
         "API_KEY": "${API_KEY}"
       }
@@ -85,68 +85,68 @@ Model Context Protocol을 통해 JIRA, GitHub, Slack 등과 연결.
 }
 ```
 
-**주요 통합:**
+**Key integrations:**
 
-| 카테고리   | 서버             | 기능                   |
-| ---------- | ---------------- | ---------------------- |
-| 이슈 추적  | JIRA, Linear     | 티켓 읽기/수정         |
-| 코드/DevOps | GitHub, Sentry   | PR 관리, 에러 추적     |
-| 커뮤니케이션 | Slack            | 메시지 전송            |
-| 데이터베이스 | PostgreSQL       | 쿼리 실행, 스키마 확인 |
+| Category       | Servers          | Capabilities              |
+| -------------- | ---------------- | ------------------------- |
+| Issue Tracking | JIRA, Linear     | Read/modify tickets       |
+| Code/DevOps    | GitHub, Sentry   | PR management, error tracking |
+| Communication  | Slack            | Send messages             |
+| Database       | PostgreSQL       | Execute queries, check schema |
 
-### 4. 스킬 - 도메인 지식
+### 4. Skills - Domain Knowledge
 
-프로젝트 특화 가이드. YAML 헤더 + 마크다운 콘텐츠 형식.
+Project-specific guides. YAML header + markdown content format.
 
 ```yaml
 ---
 name: testing-patterns
-description: Jest 테스팅 패턴. 테스트 작성/모킹 시 사용.
+description: Jest testing patterns. Use when writing tests/mocking.
 ---
 
-# 테스팅 패턴
+# Testing Patterns
 
-## 테스트 구조
-- describe 블록으로 그룹화
-- AAA 패턴: Arrange, Act, Assert
+## Test Structure
+- Group with describe blocks
+- AAA pattern: Arrange, Act, Assert
 ```
 
-### 5. 에이전트 - 전문화된 어시스턴트
+### 5. Agents - Specialized Assistants
 
-자동 실행 또는 사용자 호출 가능한 특정 작업 담당자.
+Auto-execute or user-invocable specialists for specific tasks.
 
-- **코드 리뷰 에이전트**: TypeScript 엄격 모드, 에러 처리 체크
-- **문서 동기화**: 월간 커밋 읽기 → 문서 정렬 확인
-- **품질 검토**: 주간 무작위 디렉토리 검토 및 자동 수정
-- **의존성 감사**: 격주 안전한 업데이트
+- **Code Review Agent**: TypeScript strict mode, error handling checks
+- **Docs Sync**: Monthly commit reading → document alignment check
+- **Quality Review**: Weekly random directory review and auto-fix
+- **Dependency Audit**: Bi-weekly safe updates
 
-### 6. 커맨드 - 슬래시 커맨드
+### 6. Commands - Slash Commands
 
-사용자가 명시적으로 호출하는 워크플로우.
+Workflows explicitly invoked by users.
 
-- `/ticket PROJ-123`: 티켓 읽기 → 코드 구현 → 상태 업데이트 → PR 생성
-- `/onboard`: 깊은 작업 탐색
-- `/pr-review`: PR 검토 워크플로우
+- `/ticket PROJ-123`: Read ticket → implement code → update status → create PR
+- `/onboard`: Deep work exploration
+- `/pr-review`: PR review workflow
 
-## GitHub Actions 워크플로우
+## GitHub Actions Workflows
 
-| 워크플로우      | 빈도 | 기능               |
-| --------------- | ---- | ------------------ |
-| PR Claude 리뷰  | 자동 | 전체 PR 검토       |
-| 문서 동기화     | 월간 | 문서-코드 동기화   |
-| 코드 품질       | 주간 | 무작위 리뷰 및 수정 |
-| 의존성 감사     | 격주 | 안전한 업데이트    |
+| Workflow        | Frequency | Function               |
+| --------------- | --------- | ---------------------- |
+| PR Claude Review | Auto      | Full PR review         |
+| Docs Sync       | Monthly   | Docs-code sync         |
+| Code Quality    | Weekly    | Random review and fix  |
+| Dependency Audit | Bi-weekly | Safe updates           |
 
-## 빠른 시작
+## Quick Start
 
 ```bash
-# 1. 디렉토리 생성
+# 1. Create directories
 mkdir -p .claude/{agents,commands,hooks,skills}
 
-# 2. CLAUDE.md 작성 (프로젝트 루트)
-# 3. settings.json 설정 (훅 추가)
-# 4. 첫 스킬 작성: .claude/skills/testing-patterns/SKILL.md
-# 5. MCP 구성 (선택): .mcp.json
+# 2. Write CLAUDE.md (project root)
+# 3. Configure settings.json (add hooks)
+# 4. Write first skill: .claude/skills/testing-patterns/SKILL.md
+# 5. Configure MCP (optional): .mcp.json
 ```
 
 ## License
