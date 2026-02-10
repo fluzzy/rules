@@ -29,10 +29,10 @@ Resources are organized by **domain**, each containing the same sub-categories:
 | --- | --- | --- |
 | [frontend/](./frontend/) | React, Next.js, UI/UX, etc. | 3 docs |
 | [backend/](./backend/) | API, DB, infrastructure, etc. | - |
-| [app/](./app/) | Mobile, desktop, etc. | - |
+| [app/](./app/) | Mobile, desktop, etc. | 5 docs |
 | [devops/](./devops/) | CI/CD, cloud, infrastructure, etc. | - |
 | [data/](./data/) | ML, analytics, pipelines, etc. | - |
-| [common/](./common/) | Cross-domain resources | 9 docs |
+| [common/](./common/) | Cross-domain resources | 13 docs |
 
 ## Roles
 
