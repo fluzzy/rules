@@ -1,65 +1,60 @@
 # AI Rules & Guides
 
-A collection of rules and guides for AI coding agents. Primarily used with Claude.
+A curated collection of rules, guides, skills, and resources for AI coding agents.
 
-## Directory Structure
+## Structure
+
+Resources are organized by **domain**, each containing the same sub-categories:
+
+| Sub-category | Description |
+| --- | --- |
+| `skills/` | Agent skill definitions |
+| `mcp/` | MCP server documentation |
+| `rules/` | Coding rules and conventions |
+| `guides/` | How-to guides and best practices |
+| `showcase/` | Configuration examples |
 
 ```
-├── mcp/                              # MCP server documentation
-│   ├── official-servers.md           # Official reference servers
-│   ├── sequential-thinking.md        # Sequential thinking server
-│   ├── context7.md                   # Up-to-date library documentation
-│   └── task-master.md                # Task management system
-│
-├── rules/                            # Coding rules
-│   ├── toss-frontend-fundamentals.md # Frontend code quality
-│   ├── playwright-e2e.md             # E2E testing rules
-│   └── meta-agents-rule.md           # AI agent security rules
-│
-├── guides/                           # Guides
-│   ├── agents-md.md                  # AGENTS.md writing guide
-│   ├── good-spec.md                  # How to write good specs
-│   └── openai-agents.md              # Agent design guide
-│
-├── skills/                           # Agent skills
-│   └── vercel-agent-skills.md        # Vercel agent skills
-│
-└── showcase/                         # Use cases and examples
-    └── claude-code-showcase.md       # Claude Code configuration examples
+<domain>/
+├── skills/
+├── mcp/
+├── rules/
+├── guides/
+└── showcase/
 ```
 
-## Rules
+## Domains
 
-| Rule                                                                | Description                      |
-| ------------------------------------------------------------------- | -------------------------------- |
-| [Toss Frontend Fundamentals](./rules/toss-frontend-fundamentals.md) | Frontend code quality principles |
-| [Playwright E2E](./rules/playwright-e2e.md)                         | E2E testing rules                |
-| [Meta Agents Rule](./rules/meta-agents-rule.md)                     | AI agent security framework      |
+| Domain | Description | Contents |
+| --- | --- | --- |
+| [frontend/](./frontend/) | React, Next.js, UI/UX, etc. | 3 docs |
+| [backend/](./backend/) | API, DB, infrastructure, etc. | - |
+| [app/](./app/) | Mobile, desktop, etc. | - |
+| [devops/](./devops/) | CI/CD, cloud, infrastructure, etc. | - |
+| [data/](./data/) | ML, analytics, pipelines, etc. | - |
+| [common/](./common/) | Cross-domain resources | 9 docs |
 
-## Guides
+## Roles
 
-| Guide                                            | Description                          |
-| ------------------------------------------------ | ------------------------------------ |
-| [AGENTS.md Guide](./guides/agents-md.md)         | Effective AGENTS.md writing          |
-| [Good Spec Guide](./guides/good-spec.md)         | How to write good specs for AI agents |
-| [OpenAI Agents Guide](./guides/openai-agents.md) | Agent design best practices          |
+Standalone Claude role prompts for specialized personas. See [role/](./role/) for all available roles.
 
-## MCP Servers
+| Role | Tech Stack |
+| --- | --- |
+| [CTO](./role/cto.md) | General |
+| [Debugger](./role/debugger.md) | DevTools |
+| [Refactoring Expert](./role/refactoring-expert.md) | General |
+| [React Performance Engineer](./role/react-performance-engineer.md) | React, Next.js |
+| [Frontend Code Reviewer](./role/frontend-code-reviewer.md) | Frontend |
+| [Frontend UX Engineer](./role/frontend-ux-engineer.md) | WCAG, ARIA |
+| [Three.js Creative Developer](./role/threejs-creative-developer.md) | Three.js, WebGL, GSAP |
+| [RESTful API Designer](./role/restful-api-designer.md) | REST, OpenAPI, Zod |
+| [Jest Test Engineer](./role/jest-test-engineer.md) | Jest, Vitest, Playwright |
+| [Semantic SEO Expert](./role/semantic-seo-expert.md) | HTML, Schema.org, JSON-LD |
+| [Senior Product Planner](./role/senior-product-planner.md) | General |
 
-| Server                                        | Description                       |
-| --------------------------------------------- | --------------------------------- |
-| [Official Servers](./mcp/official-servers.md) | MCP official reference servers    |
-| [Context7](./mcp/context7.md)                 | Up-to-date library documentation  |
-| [Task-Master](./mcp/task-master.md)           | AI-powered task management system |
+## Contributing
 
-## Skills
-
-| Skill                                                              | Description                                                                |
-| ------------------------------------------------------------------ | -------------------------------------------------------------------------- |
-| [Vercel Agent Skills](./skills/vercel-agent-skills.md)             | AI coding agent skills (React best practices, UI guidelines, Vercel deploy) |
-
-## Showcase
-
-| Project                                                      | Description                                                              |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------ |
-| [Claude Code Showcase](./showcase/claude-code-showcase.md)   | Comprehensive Claude Code agent configuration examples (skills, MCP, workflows) |
+- Add domain-specific resources under the appropriate `<domain>/<category>/` directory
+- Add cross-domain resources under `common/<category>/`
+- Add new roles using [role/_template.md](./role/_template.md)
+- Update the domain README when adding new files

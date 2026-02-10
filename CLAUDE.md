@@ -2,21 +2,36 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## 개요
+## Overview
 
-AI 코딩 에이전트 관련 룰, 가이드, 자료를 아카이빙하는 개인 레포지토리. 마크다운 문서만 존재하며 실행 코드 없음.
+Personal archive of rules, guides, and resources for AI coding agents. Markdown only, no executable code.
 
-## 구조
+## Structure
 
-- `mcp/` - MCP 서버 문서
-- `rules/` - 코딩 규칙 (프론트엔드, E2E 테스트, 에이전트 보안)
-- `guides/` - 가이드 (AGENTS.md 작성법, 스펙 작성법)
-- `role/` - Claude 역할 정의 (복붙용 프롬프트)
-- `skills/` - 에이전트 스킬 정의
-- `showcase/` - 설정 예시
+Resources are organized by domain. Each domain shares the same sub-category layout.
 
-## 참고
+**Domains:**
 
-- 한국어/영어 혼용
-- 각 디렉토리에 README.md 인덱스 있음
-- `role/` 새 역할 추가 시 `_template.md` 참고
+- `frontend/` - Frontend (React, Next.js, UI/UX)
+- `backend/` - Backend (API, DB, infrastructure)
+- `app/` - App development (mobile, desktop)
+- `devops/` - DevOps (CI/CD, cloud, infrastructure)
+- `data/` - Data (ML, analytics, pipelines)
+- `common/` - Cross-domain resources
+- `role/` - Claude role definitions (copy-paste prompts)
+
+**Sub-categories within each domain:**
+
+- `skills/` - Agent skill definitions
+- `mcp/` - MCP server docs
+- `rules/` - Coding rules
+- `guides/` - Guides and best practices
+- `showcase/` - Configuration examples
+
+## Conventions
+
+- All README and structural docs are written in English
+- Content files may use Korean or English
+- Every directory has a `README.md` index listing its contents
+- New roles use `role/_template.md` as a starting point
+- New domain resources go under `<domain>/<category>/` and update the domain README
