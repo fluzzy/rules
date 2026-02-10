@@ -17,6 +17,7 @@ Resources are organized by domain. Each domain shares the same sub-category layo
 - `app/` - App development (mobile, desktop)
 - `devops/` - DevOps (CI/CD, cloud, infrastructure)
 - `data/` - Data (ML, analytics, pipelines)
+- `vscode-extension/` - VS Code extension development
 - `common/` - Cross-domain resources
 - `role/` - Claude role definitions (copy-paste prompts)
 
@@ -35,3 +36,4 @@ Resources are organized by domain. Each domain shares the same sub-category layo
 - Every directory has a `README.md` index listing its contents
 - New roles use `role/_template.md` as a starting point
 - New domain resources go under `<domain>/<category>/` and update the domain README
+- Each source document (official docs, Context7, etc.) gets its own separate md file — never merge multiple sources into one

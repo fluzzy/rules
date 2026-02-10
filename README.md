@@ -32,6 +32,7 @@ Resources are organized by **domain**, each containing the same sub-categories:
 | [app/](./app/) | Mobile, desktop, etc. | 5 docs |
 | [devops/](./devops/) | CI/CD, cloud, infrastructure, etc. | - |
 | [data/](./data/) | ML, analytics, pipelines, etc. | - |
+| [vscode-extension/](./vscode-extension/) | VS Code extension development | 22 docs |
 | [common/](./common/) | Cross-domain resources | 13 docs |
 
 ## Roles
