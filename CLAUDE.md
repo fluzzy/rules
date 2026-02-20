@@ -20,6 +20,7 @@ Resources are organized by domain. Each domain shares the same sub-category layo
 - `vscode-extension/` - VS Code extension development
 - `common/` - Cross-domain resources
 - `role/` - Claude role definitions (copy-paste prompts)
+- `.claude/` - Active Claude Code skills and rules (project-scoped)
 
 **Sub-categories within each domain:**
 

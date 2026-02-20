@@ -35,6 +35,14 @@ Resources are organized by **domain**, each containing the same sub-categories:
 | [vscode-extension/](./vscode-extension/) | VS Code extension development | 22 docs |
 | [common/](./common/) | Cross-domain resources | 13 docs |
 
+## Active Skills (.claude/)
+
+Project-scoped Claude Code skills and rules that are automatically loaded by Claude Code.
+
+| Skill | Description |
+| --- | --- |
+| [create-skill](./.claude/skills/create-skill/SKILL.md) | Generates production-ready Claude Code skill definitions |
+
 ## Roles
 
 Standalone Claude role prompts for specialized personas. See [role/](./role/) for all available roles.
