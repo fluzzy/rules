@@ -18,9 +18,7 @@ Resources are organized by domain. Each domain shares the same sub-category layo
 - `devops/` - DevOps (CI/CD, cloud, infrastructure)
 - `data/` - Data (ML, analytics, pipelines)
 - `vscode-extension/` - VS Code extension development
-- `common/` - Cross-domain resources
 - `role/` - Claude role definitions (copy-paste prompts)
-- `.claude/` - Active Claude Code skills and rules (project-scoped)
 
 **Sub-categories within each domain:**
 
@@ -30,6 +28,14 @@ Resources are organized by domain. Each domain shares the same sub-category layo
 - `guides/` - Guides and best practices
 - `showcase/` - Configuration examples
 
+**Cross-domain (root-level):**
+
+- `guides/` - How-to guides and best practices
+- `mcp/` - MCP server documentation
+- `rules/` - Coding rules and conventions
+- `showcase/` - Configuration examples
+- `skills/` - Agent skill definitions
+
 ## Conventions
 
 - All README and structural docs are written in English
@@ -37,4 +43,5 @@ Resources are organized by domain. Each domain shares the same sub-category layo
 - Every directory has a `README.md` index listing its contents
 - New roles use `role/_template.md` as a starting point
 - New domain resources go under `<domain>/<category>/` and update the domain README
+- Cross-domain resources go under the root-level directories (`guides/`, `mcp/`, `rules/`, `showcase/`, `skills/`)
 - Each source document (official docs, Context7, etc.) gets its own separate md file — never merge multiple sources into one

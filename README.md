@@ -33,15 +33,18 @@ Resources are organized by **domain**, each containing the same sub-categories:
 | [devops/](./devops/) | CI/CD, cloud, infrastructure, etc. | - |
 | [data/](./data/) | ML, analytics, pipelines, etc. | - |
 | [vscode-extension/](./vscode-extension/) | VS Code extension development | 22 docs |
-| [common/](./common/) | Cross-domain resources | 13 docs |
 
-## Active Skills (.claude/)
+## Cross-domain Resources
 
-Project-scoped Claude Code skills and rules that are automatically loaded by Claude Code.
+Resources not tied to a specific domain.
 
-| Skill | Description |
+| Directory | Description |
 | --- | --- |
-| [create-skill](./.claude/skills/create-skill/SKILL.md) | Generates production-ready Claude Code skill definitions |
+| [guides/](./guides/) | How-to guides and best practices |
+| [mcp/](./mcp/) | MCP server documentation |
+| [rules/](./rules/) | Coding rules and conventions |
+| [showcase/](./showcase/) | Configuration examples |
+| [skills/](./skills/) | Agent skill definitions |
 
 ## Roles
 
@@ -64,6 +67,6 @@ Standalone Claude role prompts for specialized personas. See [role/](./role/) fo
 ## Contributing
 
 - Add domain-specific resources under the appropriate `<domain>/<category>/` directory
-- Add cross-domain resources under `common/<category>/`
+- Add cross-domain resources under the root-level directories (`guides/`, `mcp/`, `rules/`, `showcase/`, `skills/`)
 - Add new roles using [role/_template.md](./role/_template.md)
-- Update the domain README when adding new files
+- Update the relevant README when adding new files
