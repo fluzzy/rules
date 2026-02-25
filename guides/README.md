@@ -10,3 +10,5 @@ How-to guides and best practices for AI coding agents.
 | [claude-opus-best-practices.md](./claude-opus-best-practices.md) | Claude Opus 4.6 prompting, agentic patterns, and migration guide | [Anthropic](https://claude.com/resources/tutorials/get-the-most-from-claude-opus-4-6) |
 | [ai-code-quality-practices.md](./ai-code-quality-practices.md) | 12 practices for quality code with AI agents | [heidenstedt.org](https://heidenstedt.org/posts/2026/how-to-effectively-write-quality-code-with-ai/) |
 | [claude-code-power-tips.md](./claude-code-power-tips.md) | 70 Claude Code tips from hackathon winners | [GitHub](https://github.com/ykdojo/claude-code-tips) |
+| [agents-md-stop-using-init.md](./agents-md-stop-using-init.md) | Stop Using /init for AGENTS.md — research-backed anti-patterns | [Addy Osmani](https://addyosmani.com/blog/agents-md/) |
+| [code-reading-era.md](./code-reading-era.md) | AI 시대 엔지니어가 코드 대신 읽어야 할 것 | [flowkater.io](https://flowkater.io/posts/2026-02-19-code-reading-era/) |
