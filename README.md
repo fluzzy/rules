@@ -1,6 +1,6 @@
-# AI Rules & Guides
+# Archive
 
-A curated collection of rules, guides, skills, and resources for AI coding agents.
+A curated collection of rules, guides, skills, and resources for coding agents.
 
 ## Structure
 

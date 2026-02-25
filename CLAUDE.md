@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Personal archive of rules, guides, and resources for AI coding agents. Markdown only, no executable code.
+Personal archive of rules, guides, and resources for AI coding agents (repo: fluzzy/archive). Markdown only, no executable code.
 
 ## Structure
 
