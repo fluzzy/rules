@@ -7,6 +7,7 @@ Resources for app (mobile/desktop) development.
 | File | Description | Source |
 | --- | --- | --- |
 | [callstack-react-native-best-practices.md](./skills/callstack-react-native-best-practices.md) | 27+ RN optimization skills (FPS, TTI, bundle, memory) | [GitHub](https://github.com/callstackincubator/agent-skills) |
+| [expo-skills.md](./skills/expo-skills.md) | 10 official Expo skills (UI, networking, deployment, upgrades) | [GitHub](https://github.com/expo/skills) |
 | [vercel-react-native-skills.md](./skills/vercel-react-native-skills.md) | 35+ RN best practices (rendering, lists, animation, UI, state) | [GitHub](https://github.com/vercel-labs/agent-skills) |
 
 ## MCP
@@ -27,6 +28,7 @@ Resources for app (mobile/desktop) development.
 | File | Description | Source |
 | --- | --- | --- |
 | [callstack-rn-optimization.md](./guides/callstack-rn-optimization.md) | Ultimate Guide to RN Optimization (2025) | [Callstack](https://www.callstack.com/ebooks/the-ultimate-guide-to-react-native-optimization) |
+| [react-native-developer-must-have-skills.md](./guides/react-native-developer-must-have-skills.md) | 7 essential technical skills for RN developers | [GeeksforGeeks](https://www.geeksforgeeks.org/blogs/must-have-skills-for-react-native-developer/) |
 
 ## Showcase
 
