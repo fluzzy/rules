@@ -7,6 +7,7 @@ Resources for app (mobile/desktop) development.
 | File | Description | Source |
 | --- | --- | --- |
 | [callstack-react-native-best-practices.md](./skills/callstack-react-native-best-practices.md) | 27+ RN optimization skills (FPS, TTI, bundle, memory) | [GitHub](https://github.com/callstackincubator/agent-skills) |
+| [vercel-react-native-skills.md](./skills/vercel-react-native-skills.md) | 35+ RN best practices (rendering, lists, animation, UI, state) | [GitHub](https://github.com/vercel-labs/agent-skills) |
 
 ## MCP
 
