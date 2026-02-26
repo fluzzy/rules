@@ -12,3 +12,4 @@ How-to guides and best practices for AI coding agents.
 | [claude-code-power-tips.md](./claude-code-power-tips.md) | 70 Claude Code tips from hackathon winners | [GitHub](https://github.com/ykdojo/claude-code-tips) |
 | [agents-md-stop-using-init.md](./agents-md-stop-using-init.md) | Stop Using /init for AGENTS.md — research-backed anti-patterns | [Addy Osmani](https://addyosmani.com/blog/agents-md/) |
 | [code-reading-era.md](./code-reading-era.md) | AI 시대 엔지니어가 코드 대신 읽어야 할 것 | [flowkater.io](https://flowkater.io/posts/2026-02-19-code-reading-era/) |
+| [eval-agent-skills-systematically.md](./eval-agent-skills-systematically.md) | 8-step framework for systematic agent skill evaluation | [OpenAI](https://developers.openai.com/blog/eval-skills/) |
