@@ -6,7 +6,10 @@ Resources for frontend development.
 
 | File | Description | Source |
 | --- | --- | --- |
-| [vercel-agent-skills.md](./skills/vercel-agent-skills.md) | React best practices, UI guidelines, Vercel deploy | [GitHub](https://github.com/vercel-labs/agent-skills) |
+| [vercel-agent-skills.md](./skills/vercel-agent-skills.md) | Vercel Agent Skills overview — 5 skills index | [GitHub](https://github.com/vercel-labs/agent-skills) |
+| [vercel-react-best-practices.md](./skills/vercel-react-best-practices.md) | 57 React/Next.js performance rules (waterfalls, bundle, re-renders) | [GitHub](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices) |
+| [vercel-composition-patterns.md](./skills/vercel-composition-patterns.md) | 8 React component architecture patterns (compound, context, variants) | [GitHub](https://github.com/vercel-labs/agent-skills/tree/main/skills/composition-patterns) |
+| [vercel-web-design-guidelines.md](./skills/vercel-web-design-guidelines.md) | 100+ web interface design rules (accessibility, performance, UX) | [GitHub](https://github.com/vercel-labs/agent-skills/tree/main/skills/web-design-guidelines) |
 
 ## Rules
 
