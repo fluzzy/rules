@@ -13,8 +13,7 @@ Read external content (URLs, PDFs, documents) and archive it as a well-structure
 - Each source document gets its own separate md file — NEVER merge multiple sources into one
 - File names MUST be kebab-case: `descriptive-topic-name.md`
 - ALWAYS update the relevant `README.md` index after creating the file
-- Content files may use Korean or English
-- README and structural docs MUST be in English
+- All content MUST be written in English
 
 ## Steps
 

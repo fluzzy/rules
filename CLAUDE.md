@@ -38,8 +38,7 @@ Resources are organized by domain. Each domain shares the same sub-category layo
 
 ## Conventions
 
-- All README and structural docs are written in English
-- Content files may use Korean or English
+- All content is written in English
 - Every directory has a `README.md` index listing its contents
 - New roles use `role/_template.md` as a starting point
 - New domain resources go under `<domain>/<category>/` and update the domain README
