@@ -25,8 +25,9 @@ Resources for frontend development.
 
 ## Guides
 
-| File | Description |
-| --- | --- |
+| File | Description | Source |
+| --- | --- | --- |
+| [floating-webview-popup-decoupling.md](./guides/floating-webview-popup-decoupling.md) | Floating WebView popup decoupling in hybrid web-native apps (Caller/Callee pattern) | [Woowahan Tech Blog](https://techblog.woowahan.com/24165/) |
 
 ## Showcase
 
