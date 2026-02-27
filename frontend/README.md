@@ -28,6 +28,7 @@ Resources for frontend development.
 | File | Description | Source |
 | --- | --- | --- |
 | [floating-webview-popup-decoupling.md](./guides/floating-webview-popup-decoupling.md) | Floating WebView popup decoupling in hybrid web-native apps (Caller/Callee pattern) | [Woowahan Tech Blog](https://techblog.woowahan.com/24165/) |
+| [ai-driven-ui-test-automation.md](./guides/ai-driven-ui-test-automation.md) | AI-driven UI test automation case study (1 person + 3 Claude agents, 35 E2E scenarios) | [Toss Tech](https://toss.tech/article/ai-driven-ui-test-automation) |
 
 ## Showcase
 
